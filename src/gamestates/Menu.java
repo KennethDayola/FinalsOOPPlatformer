@@ -5,7 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import entities.Player;
 import main.Game;
+import main.GamePanel;
 import ui.MenuButton;
 import utilz.LoadSave;
 
@@ -14,29 +16,25 @@ import static utilz.Constants.UI.Buttons.*;
 public class Menu extends State implements Statemethods {
 
     private MenuButton[] button = new MenuButton[3];
-
     private BufferedImage backgroundImg;
-    private int menuX, menuY, menuWidth, menuHeight;
+
 
     public Menu(Game game) {
         super(game);
+        loadBackground();
         loadButtons();
+
 
     }
 
     private void loadBackground() {
         backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
-        menuWidth = (int) (backgroundImg.getWidth() * Game.SCALE);
-        menuHeight = (int) (backgroundImg.getHeight() * Game.SCALE);
-        menuX = Game.GAME_WIDTH / 2 - menuWidth / 2;
-        menuY = (int) (45 * Game.SCALE);
-
     }
 
     private void loadButtons() {
-        button[0] = new MenuButton(Game.GAME_WIDTH / 2, (int) (300 * Game.SCALE), 0, Gamestate.PLAYING, B_WIDTH_DEFAULT, B_HEIGHT_DEFAULT, B_DESIREDWIDTH, B_DESIREDHEIGHT, LoadSave.MENU_PLAYBTN);
-        button[1] = new MenuButton((int) (Game.GAME_WIDTH / 2.05), (int) (340 * Game.SCALE), 0, Gamestate.OPTIONS, B2_WIDTH_DEFAULT, B2_HEIGHT_DEFAULT, B2_DESIREDWIDTH, B2_DESIREDHEIGHT, LoadSave.MENU_EXITOPTIONSBTN);
-        button[2] = new MenuButton((int) (Game.GAME_WIDTH / 1.85), (int) (340 * Game.SCALE), 1, Gamestate.OPTIONS, B2_WIDTH_DEFAULT, B2_HEIGHT_DEFAULT, B2_DESIREDWIDTH, B2_DESIREDHEIGHT, LoadSave.MENU_EXITOPTIONSBTN);
+        button[0] = new MenuButton((int) (Game.GAME_WIDTH / 2.4), (int) (300 * Game.SCALE), 0, Gamestate.PLAYING, B_WIDTH_DEFAULT, B_HEIGHT_DEFAULT, B_DESIREDWIDTH, B_DESIREDHEIGHT, LoadSave.MENU_PLAYBTN);
+        button[1] = new MenuButton((int) (Game.GAME_WIDTH / 2.45), (int) (340 * Game.SCALE), 0, Gamestate.OPTIONS, B2_WIDTH_DEFAULT, B2_HEIGHT_DEFAULT, B2_DESIREDWIDTH, B2_DESIREDHEIGHT, LoadSave.MENU_EXITOPTIONSBTN);
+        button[2] = new MenuButton((int) (Game.GAME_WIDTH / 2.18), (int) (340 * Game.SCALE), 1, Gamestate.OPTIONS, B2_WIDTH_DEFAULT, B2_HEIGHT_DEFAULT, B2_DESIREDWIDTH, B2_DESIREDHEIGHT, LoadSave.MENU_EXITOPTIONSBTN);
     }
 
     @Override
@@ -47,11 +45,10 @@ public class Menu extends State implements Statemethods {
 
     @Override
     public void draw(Graphics g) {
-
-        g.drawImage(backgroundImg, menuX, menuY, menuWidth, menuHeight, null);
-
+        g.drawImage(backgroundImg, 0 ,0 , Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
         for (MenuButton mb : button)
             mb.draw(g);
+
     }
 
     @Override

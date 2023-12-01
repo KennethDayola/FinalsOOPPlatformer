@@ -2,6 +2,16 @@ package utilz;
 import main.Game;
 public class Constants {
 
+    public static class Environment {
+        public static final int BG_ELEMENTS_WIDTH_DEFAULT = 576;
+        public static final int BG_ELEMENTS_HEIGHT_DEFAULT = 324;
+
+        public static final int BG_ELEMENTS_WIDTH = (int) (BG_ELEMENTS_WIDTH_DEFAULT * Game.SCALE);
+        public static final int BG_ELEMENTS_HEIGHT = (int) (BG_ELEMENTS_HEIGHT_DEFAULT * Game.SCALE);
+
+    }
+
+
     public static class UI {
         public static class Buttons {
 

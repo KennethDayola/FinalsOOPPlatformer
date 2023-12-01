@@ -4,11 +4,14 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import entities.Player;
 import levels.LevelManager;
 import main.Game;
 import utilz.LoadSave;
+import static utilz.Constants.Environment.*;
 
 
 public class Playing extends State implements Statemethods {
@@ -16,14 +19,23 @@ public class Playing extends State implements Statemethods {
     private LevelManager levelManager;
 
     private int xLvlOffset;
-    private int leftBorder = (int) (0.2 * Game.GAME_WIDTH);
-    private int rightBorder = (int) (0.8 * Game.GAME_WIDTH);
+    private int leftBorder = (int) (0.3 * Game.GAME_WIDTH);
+    private int rightBorder = (int) (0.6 * Game.GAME_WIDTH);
     private int lvlTilesWide = LoadSave.GetLevelData()[0].length;
     private int maxTilesOffset = lvlTilesWide - Game.TILES_IN_WIDTH;
     private int maxLvlOffsetX = maxTilesOffset * Game.TILES_SIZE;
+    private BufferedImage backgroundImg, bigCloud, smallCloud, bigRock, smallTerrain;
+    private int[] smallCloudsPos;
+    private Random rnd = new Random();
+
     public Playing(Game game) {
         super(game);
         initClasses();
+
+        backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.PLAYING_BG_IMG);
+        bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
+        smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
+        smallTerrain = LoadSave.GetSpriteAtlas(LoadSave.SMALL_TERRAIN);
     }
 
     private void initClasses() {
@@ -43,9 +55,24 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void draw(Graphics g) {
+        g.drawImage(backgroundImg, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        drawClouds(g);
+        
         levelManager.draw(g, xLvlOffset);
         player.render(g, xLvlOffset);
     }
+
+    private void drawClouds(Graphics g) {
+
+        for (int i = 0; i < 3; i++)
+            g.drawImage(bigCloud, i * BG_ELEMENTS_WIDTH - (int) (xLvlOffset * 0.3), 0, BG_ELEMENTS_WIDTH, BG_ELEMENTS_HEIGHT, null);
+        for (int i = 0; i < 3; i++)
+            g.drawImage(smallCloud, i * BG_ELEMENTS_WIDTH - (int) (xLvlOffset * 0.7), 0, BG_ELEMENTS_WIDTH, BG_ELEMENTS_HEIGHT, null);
+        for (int i = 0; i < 3; i++)
+            g.drawImage(smallTerrain, i * BG_ELEMENTS_WIDTH - (int) (xLvlOffset * 0.45), Game.GAME_HEIGHT - BG_ELEMENTS_HEIGHT, BG_ELEMENTS_WIDTH, BG_ELEMENTS_HEIGHT , null);
+    }
+
+
     private void checkCloseToBorder() {
         int playerX = (int) player.getHitbox().x;
         int diff = playerX - xLvlOffset;
@@ -72,9 +99,11 @@ public class Playing extends State implements Statemethods {
     public void keyPressed(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:
+            case KeyEvent.VK_LEFT:
                 player.setLeft(true);
                 break;
             case KeyEvent.VK_D:
+            case KeyEvent.VK_RIGHT:
                 player.setRight(true);
                 break;
             case KeyEvent.VK_SPACE:
@@ -90,9 +119,11 @@ public class Playing extends State implements Statemethods {
     public void keyReleased(KeyEvent e) {
         switch (e.getKeyCode()) {
             case KeyEvent.VK_A:
+            case KeyEvent.VK_LEFT:
                 player.setLeft(false);
                 break;
             case KeyEvent.VK_D:
+            case KeyEvent.VK_RIGHT:
                 player.setRight(false);
                 break;
             case KeyEvent.VK_SPACE:

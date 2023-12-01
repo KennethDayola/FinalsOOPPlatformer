@@ -25,7 +25,7 @@ public class HelpMethods {
         float yIndex = y / Game.TILES_SIZE;
 
         int value = lvlData[(int) yIndex][(int) xIndex];
-
+        // INCREASE IF NA INCREASE ANG TILES INDEX, ADJUST LATER
         if (value >= 48 || value < 0 || value != 10)
             return true;
         return false;
