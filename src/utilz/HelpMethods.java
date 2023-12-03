@@ -1,7 +1,15 @@
 package utilz;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+
+import static utilz.Constants.ObjectConstants.*;
 
 import main.Game;
+import objects.WaterTop;
+
+
 
 public class HelpMethods {
 
@@ -14,6 +22,17 @@ public class HelpMethods {
         return false;
     }
 
+    public static ArrayList<WaterTop> GetWaterTop(BufferedImage img){
+        ArrayList<WaterTop> list = new ArrayList<>();
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == WATER_TOP1 || value == WATER_TOP2 || value == WATER_TOP3 )
+                    list.add(new WaterTop(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+            }
+        return list;
+    }
     private static boolean IsSolid(float x, float y, int[][] lvlData) {
         int maxWidth = lvlData[0].length * Game.TILES_SIZE;
         if (x < 0 || x >= maxWidth)

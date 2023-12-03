@@ -5,17 +5,19 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.Random;
 
 import entities.Player;
+import objects.ObjectManager;
 import levels.LevelManager;
 import main.Game;
+
 import utilz.LoadSave;
 import static utilz.Constants.Environment.*;
 
 
 public class Playing extends State implements Statemethods {
     private Player player;
+    private ObjectManager objectManager;
     private LevelManager levelManager;
 
     private int xLvlOffset;
@@ -25,8 +27,7 @@ public class Playing extends State implements Statemethods {
     private int maxTilesOffset = lvlTilesWide - Game.TILES_IN_WIDTH;
     private int maxLvlOffsetX = maxTilesOffset * Game.TILES_SIZE;
     private BufferedImage backgroundImg, bigCloud, smallCloud, bigRock, smallTerrain;
-    private int[] smallCloudsPos;
-    private Random rnd = new Random();
+    private boolean paused = false, gameOver = false;
 
     public Playing(Game game) {
         super(game);
@@ -36,10 +37,13 @@ public class Playing extends State implements Statemethods {
         bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
         smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
         smallTerrain = LoadSave.GetSpriteAtlas(LoadSave.SMALL_TERRAIN);
+        objectManager.loadObjects(levelManager.getCurrentLevel());
     }
 
     private void initClasses() {
         levelManager = new LevelManager(game);
+        objectManager = new ObjectManager(this);
+
         player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE));
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
@@ -47,10 +51,10 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void update() {
-        levelManager.update();
-        player.update();
-        checkCloseToBorder();
-
+            levelManager.update();
+            objectManager.update();
+            player.update();
+            checkCloseToBorder();
     }
 
     @Override
@@ -60,6 +64,12 @@ public class Playing extends State implements Statemethods {
         
         levelManager.draw(g, xLvlOffset);
         player.render(g, xLvlOffset);
+        objectManager.draw(g, xLvlOffset);
+
+        if (paused){
+            g.setColor(new Color(0,0,0,100));
+            g.fillRect(0,0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+        }
     }
 
     private void drawClouds(Graphics g) {
@@ -89,46 +99,76 @@ public class Playing extends State implements Statemethods {
 
     }
 
-    @Override
-    public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == MouseEvent.BUTTON1)
-            player.setAttacking(true);
+    private void togglePause(){
+        player.resetDirBooleans();
+        paused = !paused;
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-            case KeyEvent.VK_LEFT:
-                player.setLeft(true);
-                break;
-            case KeyEvent.VK_D:
-            case KeyEvent.VK_RIGHT:
-                player.setRight(true);
-                break;
-            case KeyEvent.VK_SPACE:
-                player.setJump(true);
-                break;
-            case KeyEvent.VK_BACK_SPACE:
-                Gamestate.state = Gamestate.MENU;
-                break;
+    private void toggleGameOver() {
+        gameOver = !gameOver;
+        if (gameOver){
+            resetAll();
         }
     }
 
     @Override
+    public void mouseClicked(MouseEvent e) {
+        if (!paused) {
+            if (e.getButton() == MouseEvent.BUTTON1)
+                player.setAttacking(true);
+        }
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if (!paused) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A:
+                case KeyEvent.VK_LEFT:
+                    player.setLeft(true);
+                    break;
+                case KeyEvent.VK_D:
+                case KeyEvent.VK_RIGHT:
+                    player.setRight(true);
+                    break;
+                case KeyEvent.VK_SPACE:
+                    player.setJump(true);
+                    break;
+                case KeyEvent.VK_BACK_SPACE:
+                    Gamestate.state = Gamestate.MENU;
+                    break;
+                case KeyEvent.VK_P:
+                   resetAll();
+                    break;
+
+            }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+            togglePause();
+        }
+    }
+
+    public void resetAll() {
+        paused = false;
+        player.resetAll();
+    }
+
+    @Override
     public void keyReleased(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_A:
-            case KeyEvent.VK_LEFT:
-                player.setLeft(false);
-                break;
-            case KeyEvent.VK_D:
-            case KeyEvent.VK_RIGHT:
-                player.setRight(false);
-                break;
-            case KeyEvent.VK_SPACE:
-                player.setJump(false);
-                break;
+        if (!paused) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_A:
+                case KeyEvent.VK_LEFT:
+                    player.setLeft(false);
+                    break;
+                case KeyEvent.VK_D:
+                case KeyEvent.VK_RIGHT:
+                    player.setRight(false);
+                    break;
+                case KeyEvent.VK_SPACE:
+                    player.setJump(false);
+                    break;
+            }
         }
 
     }
@@ -157,6 +197,9 @@ public class Playing extends State implements Statemethods {
 
     public Player getPlayer() {
         return player;
+    }
+    public ObjectManager getObjectManager() {
+        return objectManager;
     }
 
 }

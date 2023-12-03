@@ -2,6 +2,29 @@ package utilz;
 import main.Game;
 public class Constants {
 
+    public static final float GRAVITY = 0.04f * Game.SCALE;
+    public static final int ANI_SPEED = 25;
+
+    public static class ObjectConstants {
+
+        public static final int WATER_BASE = 0;
+        public static final int WATER_TOP1 = 1, WATER_TOP2 = 2, WATER_TOP3 = 3;
+
+        public static final int WATER_DIMENSIONS_DEFAULT = 32;
+        public static final int WATER_DIMENSIONS = (int) (WATER_DIMENSIONS_DEFAULT * Game.SCALE);
+
+        public static int GetSpriteAmount(int object_type) {
+            switch (object_type) {
+                case WATER_TOP1:
+                case WATER_TOP2:
+                case WATER_TOP3:
+                    return 4;
+                case WATER_BASE:
+                    return 1;
+            }
+            return 1;
+        }
+    }
     public static class Environment {
         public static final int BG_ELEMENTS_WIDTH_DEFAULT = 576;
         public static final int BG_ELEMENTS_HEIGHT_DEFAULT = 324;

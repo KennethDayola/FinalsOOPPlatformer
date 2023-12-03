@@ -16,6 +16,7 @@ public class LevelManager {
         this.game = game;
         importOutsideSprites();
         levelOne = new Level(LoadSave.GetLevelData());
+
     }
 
     private void importOutsideSprites() {
