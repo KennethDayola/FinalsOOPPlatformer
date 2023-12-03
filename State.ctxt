@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=State
+comment1.params=game
+comment1.target=State(Game)
+comment2.params=e\ mb
+comment2.target=boolean\ isIn(java.awt.event.MouseEvent,\ MenuButton)
+comment3.params=
+comment3.target=Game\ getGame()
+numComments=4

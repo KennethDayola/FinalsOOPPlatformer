@@ -1,0 +1,27 @@
+#BlueJ class context
+comment0.target=MenuButton
+comment1.params=xPos\ yPos\ rowIndex\ state\ width\ height\ desiredWidth\ desiredHeight\ spritePath
+comment1.target=MenuButton(int,\ int,\ int,\ Gamestate,\ int,\ int,\ int,\ int,\ java.lang.String)
+comment10.params=
+comment10.target=java.awt.Rectangle\ getBounds()
+comment11.params=
+comment11.target=void\ applyGamestate()
+comment12.params=
+comment12.target=void\ resetBools()
+comment2.params=
+comment2.target=void\ initBounds()
+comment3.params=
+comment3.target=void\ loadImgs()
+comment4.params=g
+comment4.target=void\ draw(java.awt.Graphics)
+comment5.params=
+comment5.target=void\ update()
+comment6.params=
+comment6.target=boolean\ isMouseOver()
+comment7.params=mouseOver
+comment7.target=void\ setMouseOver(boolean)
+comment8.params=
+comment8.target=boolean\ isMousePressed()
+comment9.params=mousePressed
+comment9.target=void\ setMousePressed(boolean)
+numComments=13

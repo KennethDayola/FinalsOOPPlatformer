@@ -1,0 +1,13 @@
+#BlueJ class context
+comment0.target=MusicMethods
+comment1.params=filePath
+comment1.target=void\ loadMusic(java.lang.String)
+comment2.params=loop
+comment2.target=void\ play(boolean)
+comment3.params=
+comment3.target=void\ stop()
+comment4.params=isLoaded
+comment4.target=void\ setMusicLoaded(boolean)
+comment5.params=volume
+comment5.target=void\ setVolume(float)
+numComments=6
