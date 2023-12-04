@@ -245,6 +245,9 @@ public class Player extends Entity {
     public boolean getIsDead(){
         return isDead;
     }
+    public boolean getInAir(){
+        return inAir;
+    }
     public void setAttacking(boolean attacking) {
         this.attacking = attacking;
     }

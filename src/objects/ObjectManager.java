@@ -5,6 +5,7 @@ import gamestates.Playing;
 import levels.Level;
 import main.Game;
 import utilz.LoadSave;
+import utilz.MusicMethods;
 
 import java.awt.Graphics;
 import java.awt.Color;
@@ -24,21 +25,21 @@ public class ObjectManager {
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
-        loadWaterAni(LoadSave.WATER_ANI);
-        loadFLagAni(LoadSave.FLAG_TOP);
+        loadWaterAni();
+        loadFLagAni();
         loadStillImages();
     }
 
-    private void loadFLagAni(String filePath) {
-        BufferedImage flagAniTemp = LoadSave.GetSpriteAtlas(filePath);
+    private void loadFLagAni() {
+        BufferedImage flagAniTemp = LoadSave.GetSpriteAtlas(LoadSave.FLAG_TOP);
         flagTopImg = new BufferedImage[9];
 
         for (int i = 0; i < flagTopImg.length; i++)
             flagTopImg[i] = flagAniTemp.getSubimage(32 * i, 0, 32, 32);
     }
 
-    private void loadWaterAni(String filePath){
-        BufferedImage waterAni = LoadSave.GetSpriteAtlas(filePath);
+    private void loadWaterAni(){
+        BufferedImage waterAni = LoadSave.GetSpriteAtlas(LoadSave.WATER_ANI);
         waterTopImg = new BufferedImage[3][4];
 
         for (int j = 0; j < waterTopImg.length; j++)
@@ -59,8 +60,10 @@ public class ObjectManager {
     }
     public void checkWaterTouched(Player p) {
         for (WaterTop w : waterTop)
-            if (w.getHitbox().intersects(p.getHitbox()))
+            if (w.getHitbox().intersects(p.getHitbox())) {
+                MusicMethods.deathSound.play();
                 p.kill();
+            }
     }
 
     public void checkFlagTouched(Player p) {
@@ -69,9 +72,23 @@ public class ObjectManager {
                 f.doAnimation = true;
                 if (f.getObjType() == FLAG_ANI) {
                     playing.setCheckpoint(2300 * Game.SCALE, 200 * Game.SCALE);
+                    if(!f.soundPlayedCheckpoint1){
+                        MusicMethods.checkpointSound.play();
+                        f.soundPlayedCheckpoint1 = true;
+                    }
                 } else if (f.getObjType() == FLAG_ANI2) {
-                    System.out.println("2nd");                }
-                // Add more conditions for new flag types if needed
+                    playing.setCheckpoint(4995 * Game.SCALE, 50 * Game.SCALE);
+                    if(!f.soundPlayedCheckpoint2){
+                        MusicMethods.checkpointSound.play();
+                        f.soundPlayedCheckpoint2 = true;
+                    }
+                }else if (f.getObjType() == FLAG_ANI3) {
+                    playing.setCheckpoint(8128 * Game.SCALE, 180 * Game.SCALE);
+                    if(!f.soundPlayedCheckpoint2){
+                        MusicMethods.checkpointSound.play();
+                        f.soundPlayedCheckpoint2 = true;
+                    }
+                }
             }
         }
     }

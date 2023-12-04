@@ -6,7 +6,6 @@ import java.awt.image.BufferedImage;
 
 import gamestates.Gamestate;
 import utilz.LoadSave;
-import static utilz.Constants.UI.Buttons.*;
 
 public class MenuButton {
     private int xPos, yPos, rowIndex, index;
@@ -54,8 +53,9 @@ public class MenuButton {
         index = 0;
         if (mouseOver)
             index = 1;
-        if (mousePressed)
+        if (mousePressed) {
             index = 2;
+        }
     }
 
     public boolean isMouseOver() {

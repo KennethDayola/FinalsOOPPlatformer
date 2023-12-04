@@ -12,6 +12,8 @@ import levels.LevelManager;
 import main.Game;
 
 import utilz.LoadSave;
+import utilz.MusicMethods;
+
 import static utilz.Constants.Environment.*;
 
 
@@ -44,7 +46,7 @@ public class Playing extends State implements Statemethods {
         levelManager = new LevelManager(game);
         objectManager = new ObjectManager(this);
 
-        player = new Player(4995 * Game.SCALE, 50 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
+        player = new Player(100 * Game.SCALE, 250 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
     }
@@ -126,19 +128,22 @@ public class Playing extends State implements Statemethods {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
                     player.setLeft(true);
+                    MusicMethods.runningSound.play();
                     break;
                 case KeyEvent.VK_D:
                 case KeyEvent.VK_RIGHT:
                     player.setRight(true);
+                    MusicMethods.runningSound.play();
                     break;
                 case KeyEvent.VK_SPACE:
                     player.setJump(true);
+                    MusicMethods.jumpSound.play();
                     break;
                 case KeyEvent.VK_BACK_SPACE:
                     Gamestate.state = Gamestate.MENU;
                     break;
                 case KeyEvent.VK_P:
-                   resetAll();
+                    resetAll();
                     break;
 
             }
@@ -160,10 +165,12 @@ public class Playing extends State implements Statemethods {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
                     player.setLeft(false);
+                    MusicMethods.runningSound.stopLoop();
                     break;
                 case KeyEvent.VK_D:
                 case KeyEvent.VK_RIGHT:
                     player.setRight(false);
+                    MusicMethods.runningSound.stopLoop();
                     break;
                 case KeyEvent.VK_SPACE:
                     player.setJump(false);

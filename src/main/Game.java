@@ -4,6 +4,8 @@ import java.awt.Graphics;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
+import utilz.Constants;
+import utilz.MusicMethods;
 
 public class Game implements Runnable {
 
@@ -26,13 +28,28 @@ public class Game implements Runnable {
 
     public Game() {
         initClasses();
+        initMusic();
+        threadSleepForLoading();
 
+        MusicMethods.bgm.play();
         gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
         gamePanel.requestFocus();
 
         startGameLoop();
+    }
 
+    private void initMusic() {
+        MusicMethods.initMusic();
+    }
+
+
+    private void threadSleepForLoading() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initClasses() {

@@ -12,6 +12,7 @@ public class Constants {
         public static final int FLAG_BASE = 4;
         public static final int FLAG_ANI = 5;
         public static final int FLAG_ANI2 = 6;
+        public static final int FLAG_ANI3 = 7;
         public static final int OBJECTS_DIMENSIONS_DEFAULT = 32;
         public static final int OBJECT_DIMENSIONS = (int) (OBJECTS_DIMENSIONS_DEFAULT * Game.SCALE);
 
@@ -31,6 +32,7 @@ public class Constants {
             return 1;
         }
     }
+
     public static class Environment {
         public static final int BG_ELEMENTS_WIDTH_DEFAULT = 576;
         public static final int BG_ELEMENTS_HEIGHT_DEFAULT = 324;

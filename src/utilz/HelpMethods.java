@@ -46,6 +46,8 @@ public class HelpMethods {
                     list.add(new FlagAnimation(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
                 else if (value == FLAG_ANI2)
                     list.add(new FlagAnimation(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                else if (value == FLAG_ANI3)
+                    list.add(new FlagAnimation(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
             }
         return list;
     }

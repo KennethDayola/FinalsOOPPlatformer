@@ -5,11 +5,10 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
-import entities.Player;
 import main.Game;
-import main.GamePanel;
 import ui.MenuButton;
 import utilz.LoadSave;
+import utilz.MusicMethods;
 
 import static utilz.Constants.UI.Buttons.*;
 
@@ -62,6 +61,7 @@ public class Menu extends State implements Statemethods {
         for (MenuButton mb : button) {
             if (isIn(e, mb)) {
                 mb.setMousePressed(true);
+                MusicMethods.clickSound.play();
             }
         }
 
@@ -71,8 +71,11 @@ public class Menu extends State implements Statemethods {
     public void mouseReleased(MouseEvent e) {
         for (MenuButton mb : button) {
             if (isIn(e, mb)) {
-                if (mb.isMousePressed())
+                if (mb.isMousePressed()) {
                     mb.applyGamestate();
+                    MusicMethods.bgm.stop();
+                    MusicMethods.bgm.playGameMusic();
+                }
                 break;
             }
         }
@@ -89,16 +92,26 @@ public class Menu extends State implements Statemethods {
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        for (MenuButton mb : button)
-            mb.setMouseOver(false);
+        boolean anyButtonHovered = false;
 
-        for (MenuButton mb : button)
-            if (isIn(e, mb)) {
-                mb.setMouseOver(true);
-                break;
+        for (MenuButton mb : button) {
+            boolean wasHovered = mb.isMouseOver(); // Remember the previous state
+
+            mb.setMouseOver(isIn(e, mb));
+            anyButtonHovered = anyButtonHovered || isIn(e, mb);
+
+            if (mb.isMouseOver() && !wasHovered) {
+                if (!MusicMethods.hoverSound.getMusicPlayed()) {
+                    MusicMethods.hoverSound.play();
+                }
             }
-
+        }
+        if (!anyButtonHovered) {
+            MusicMethods.hoverSound.setMusicPlayed(false);
+        }
     }
+
+
 
     @Override
     public void keyPressed(KeyEvent e) {
