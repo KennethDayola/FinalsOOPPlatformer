@@ -43,13 +43,24 @@ public class Player extends Entity {
         initHitbox(x, y, (int) (20 * Game.SCALE), (int) (47 * Game.SCALE));
         this.playing = playing;
     }
+
+    public void setCheckpoint(float xCheckpoint, float yCheckpoint) {
+        this.x = xCheckpoint;
+        this.y = yCheckpoint;
+    }
+
     public void update() {
         updatePos();
         if (moving){
             checkWaterTouched();
+            checkFlagTouched();
         }
         updateAnimationTick();
         setAnimation();
+    }
+
+    private void checkFlagTouched() {
+        playing.checkFlagTouched(this);
     }
 
     public void render(Graphics g, int lvlOffset) {

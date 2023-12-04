@@ -44,7 +44,7 @@ public class Playing extends State implements Statemethods {
         levelManager = new LevelManager(game);
         objectManager = new ObjectManager(this);
 
-        player = new Player(100 * Game.SCALE, 250 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
+        player = new Player(4995 * Game.SCALE, 50 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
     }
@@ -176,7 +176,9 @@ public class Playing extends State implements Statemethods {
     public void checkWaterTouched(Player player) {
         objectManager.checkWaterTouched(player);
     }
-
+    public void setCheckpoint(float x, float y) {
+        player.setCheckpoint(x,y);
+    }
     public void windowFocusLost() {
         player.resetDirBooleans();
     }
@@ -186,6 +188,9 @@ public class Playing extends State implements Statemethods {
     }
     public ObjectManager getObjectManager() {
         return objectManager;
+    }
+    public void checkFlagTouched(Player player) {
+        objectManager.checkFlagTouched(player);
     }
 
     @Override

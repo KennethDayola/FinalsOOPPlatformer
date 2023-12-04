@@ -22,6 +22,9 @@ public class LoadSave {
     public static final String SMALL_TERRAIN = "small_terrain.png";
     public static final String WATER_BASE = "waterBase.png";
     public static final String WATER_ANI = "waterAni.png";
+    public static final String STILL_OBJECTS = "stillObjectSprites.png";
+    public static final String FLAG_TOP = "flagTop.png";
+
 
     public static BufferedImage GetSpriteAtlas(String fileName){
         BufferedImage img = null;

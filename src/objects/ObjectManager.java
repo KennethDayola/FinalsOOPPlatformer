@@ -3,6 +3,7 @@ package objects;
 import entities.Player;
 import gamestates.Playing;
 import levels.Level;
+import main.Game;
 import utilz.LoadSave;
 
 import java.awt.Graphics;
@@ -15,13 +16,27 @@ import static utilz.Constants.ObjectConstants.*;
 public class ObjectManager {
     private Playing playing;
     private ArrayList<WaterTop> waterTop;
+    private ArrayList<StillObjects> stillObjects;
+    private ArrayList<FlagAnimation> flagAni;
     private BufferedImage[][]waterTopImg;
-    private BufferedImage waterBase;
+    private BufferedImage[]flagTopImg;
+    private BufferedImage [] stillObjectsImg;
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
         loadWaterAni(LoadSave.WATER_ANI);
+        loadFLagAni(LoadSave.FLAG_TOP);
+        loadStillImages();
     }
+
+    private void loadFLagAni(String filePath) {
+        BufferedImage flagAniTemp = LoadSave.GetSpriteAtlas(filePath);
+        flagTopImg = new BufferedImage[9];
+
+        for (int i = 0; i < flagTopImg.length; i++)
+            flagTopImg[i] = flagAniTemp.getSubimage(32 * i, 0, 32, 32);
+    }
+
     private void loadWaterAni(String filePath){
         BufferedImage waterAni = LoadSave.GetSpriteAtlas(filePath);
         waterTopImg = new BufferedImage[3][4];
@@ -30,9 +45,17 @@ public class ObjectManager {
             for (int i = 0; i < waterTopImg[j].length; i++)
                 waterTopImg[j][i] = waterAni.getSubimage(32 * i, 32 * j, 32, 32);
     }
+    private void loadStillImages(){
+        BufferedImage stillImgTemp = LoadSave.GetSpriteAtlas(LoadSave.STILL_OBJECTS);
+        stillObjectsImg = new BufferedImage[2];
+        for (int i = 0; i < stillObjectsImg.length; i++)
+            stillObjectsImg[i] = stillImgTemp.getSubimage(32 * i, 0, 32, 32);
+    }
     public void update(){
         for (WaterTop w: waterTop)
             w.update();
+        for (FlagAnimation f: flagAni)
+            f.update();
     }
     public void checkWaterTouched(Player p) {
         for (WaterTop w : waterTop)
@@ -40,14 +63,29 @@ public class ObjectManager {
                 p.kill();
     }
 
-    public void loadObjects(Level newLevel) {
-        waterTop = newLevel.getWaterTop();
-    }
-    public void draw(Graphics g, int xLvlOffset) {
-        drawWaterAni(g, xLvlOffset);
+    public void checkFlagTouched(Player p) {
+        for (FlagAnimation f : flagAni) {
+            if (f.getHitbox().intersects(p.getHitbox())) {
+                f.doAnimation = true;
+                if (f.getObjType() == FLAG_ANI) {
+                    playing.setCheckpoint(2300 * Game.SCALE, 200 * Game.SCALE);
+                } else if (f.getObjType() == FLAG_ANI2) {
+                    System.out.println("2nd");                }
+                // Add more conditions for new flag types if needed
+            }
+        }
     }
 
-    private void drawWaterAni(Graphics g, int xLvlOffset) {
+    public void loadObjects(Level newLevel) {
+        waterTop = newLevel.getWaterTop();
+        stillObjects = newLevel.getStillObjects();
+        flagAni = newLevel.getFlagAni();
+    }
+    public void draw(Graphics g, int xLvlOffset) {
+        drawObjects(g, xLvlOffset);
+    }
+
+    private void drawObjects(Graphics g, int xLvlOffset) {
         for (WaterTop w : waterTop) {
             int type = 0;
             if (w.getObjType() == WATER_TOP2)
@@ -55,8 +93,34 @@ public class ObjectManager {
             if (w.getObjType() == WATER_TOP3)
                 type = 2;
             g.drawImage(waterTopImg[type][w.getAniIndex()], (int) (w.getHitbox().x - w.getxDrawOffset() - xLvlOffset),
-                    (int) (w.getHitbox().y - w.getyDrawOffset()), WATER_DIMENSIONS, WATER_DIMENSIONS, null);
+                    (int) (w.getHitbox().y - w.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
         }
+        for (StillObjects s: stillObjects){
+            int type = 0;
+            if (s.getObjType() == WATER_BASE)
+                type = 1;
+            g.drawImage(stillObjectsImg[type], (int) (s.getHitbox().x - s.getxDrawOffset() - xLvlOffset),
+                    (int) (s.getHitbox().y - s.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+        }
+        for (FlagAnimation f: flagAni){
+            if (!f.doAnimation) {
+                // Draw the flag at the first index
+                g.drawImage(flagTopImg[0], (int) (f.getHitbox().x - f.getxDrawOffset() - xLvlOffset),
+                        (int) (f.getHitbox().y - f.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+            } else {
+                // Draw indices 1 to 5 during animation
+                if (f.getAniIndex() >= 1 && f.getAniIndex() <= 5) {
+                    g.drawImage(flagTopImg[f.getAniIndex()], (int) (f.getHitbox().x - f.getxDrawOffset() - xLvlOffset),
+                            (int) (f.getHitbox().y - f.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+                } else {
+                    // Loop indices 6 to 8 when done with indices 1 to 5
+                    int loopedIndex = (f.getAniIndex() - 1) % 3 + 6;
+                    g.drawImage(flagTopImg[loopedIndex], (int) (f.getHitbox().x - f.getxDrawOffset() - xLvlOffset),
+                            (int) (f.getHitbox().y - f.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+                }
+            }
+        }
+
     }
     private void drawWaterHitbox(Graphics g, WaterTop waterTop, int xLvlOffset) {
         g.setColor(Color.BLUE);

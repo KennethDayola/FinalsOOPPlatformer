@@ -9,9 +9,11 @@ public class Constants {
 
         public static final int WATER_BASE = 0;
         public static final int WATER_TOP1 = 1, WATER_TOP2 = 2, WATER_TOP3 = 3;
-
-        public static final int WATER_DIMENSIONS_DEFAULT = 32;
-        public static final int WATER_DIMENSIONS = (int) (WATER_DIMENSIONS_DEFAULT * Game.SCALE);
+        public static final int FLAG_BASE = 4;
+        public static final int FLAG_ANI = 5;
+        public static final int FLAG_ANI2 = 6;
+        public static final int OBJECTS_DIMENSIONS_DEFAULT = 32;
+        public static final int OBJECT_DIMENSIONS = (int) (OBJECTS_DIMENSIONS_DEFAULT * Game.SCALE);
 
         public static int GetSpriteAmount(int object_type) {
             switch (object_type) {
@@ -19,8 +21,12 @@ public class Constants {
                 case WATER_TOP2:
                 case WATER_TOP3:
                     return 4;
+                case FLAG_BASE:
                 case WATER_BASE:
                     return 1;
+                case FLAG_ANI:
+                case FLAG_ANI2:
+                    return 9;
             }
             return 1;
         }
@@ -50,13 +56,6 @@ public class Constants {
             public static final int B2_DESIREDHEIGHT = (int) (35 * Game.SCALE);
         }
     }
-    public static class Directions {
-        public static final int LEFT = 0;
-        public static final int UP = 1;
-        public static final int RIGHT = 2;
-        public static final int DOWN = 3;
-    }
-
     public static class PlayerConstants{
         public static final int IDLE = 0;
         public static final int RUNNING = 1;

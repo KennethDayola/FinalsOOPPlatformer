@@ -1,7 +1,7 @@
 package objects;
 
-import static utilz.Constants.ANI_SPEED;
 import static utilz.Constants.ObjectConstants.*;
+import static utilz.LoadSave.FLAG_TOP;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -14,7 +14,7 @@ public class GameObject {
     protected int x, y, objType;
     protected Rectangle2D.Float hitbox;
     protected boolean doAnimation, active = true;
-    protected int aniTick, aniIndex, aniSpeed = 37;
+    protected int aniTick, aniIndex, aniSpeed = 65;
     protected int xDrawOffset, yDrawOffset;
 
     public GameObject(int x, int y, int objType) {
@@ -24,6 +24,9 @@ public class GameObject {
     }
 
     protected void updateAnimationTick() {
+        if (objType == FLAG_ANI){
+            aniSpeed = 20;
+        }
         aniTick++;
         if (aniTick >= aniSpeed) {
             aniTick = 0;

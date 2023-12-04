@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import static utilz.Constants.ObjectConstants.*;
 
 import main.Game;
+import objects.FlagAnimation;
+import objects.StillObjects;
 import objects.WaterTop;
 
 
@@ -33,6 +35,33 @@ public class HelpMethods {
             }
         return list;
     }
+
+    public static ArrayList<FlagAnimation> GetFlagAnimation(BufferedImage img){
+        ArrayList<FlagAnimation> list = new ArrayList<>();
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == FLAG_ANI)
+                    list.add(new FlagAnimation(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                else if (value == FLAG_ANI2)
+                    list.add(new FlagAnimation(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+            }
+        return list;
+    }
+
+    public static ArrayList<StillObjects> GetStillObjects(BufferedImage img){
+        ArrayList<StillObjects> list = new ArrayList<>();
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == WATER_BASE || value == FLAG_BASE )
+                    list.add(new StillObjects(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+            }
+        return list;
+    }
+
     private static boolean IsSolid(float x, float y, int[][] lvlData) {
         int maxWidth = lvlData[0].length * Game.TILES_SIZE;
         if (x < 0 || x >= maxWidth)
