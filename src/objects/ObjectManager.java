@@ -1,5 +1,6 @@
 package objects;
 
+import entities.Player;
 import gamestates.Playing;
 import levels.Level;
 import utilz.LoadSave;
@@ -19,11 +20,7 @@ public class ObjectManager {
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
-        loadImgs();
         loadWaterAni(LoadSave.WATER_ANI);
-    }
-    private void loadImgs() {
-        waterBase = LoadSave.GetSpriteAtlas(LoadSave.WATER_BASE);
     }
     private void loadWaterAni(String filePath){
         BufferedImage waterAni = LoadSave.GetSpriteAtlas(filePath);
@@ -37,6 +34,12 @@ public class ObjectManager {
         for (WaterTop w: waterTop)
             w.update();
     }
+    public void checkWaterTouched(Player p) {
+        for (WaterTop w : waterTop)
+            if (w.getHitbox().intersects(p.getHitbox()))
+                p.kill();
+    }
+
     public void loadObjects(Level newLevel) {
         waterTop = newLevel.getWaterTop();
     }

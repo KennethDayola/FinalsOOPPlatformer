@@ -44,7 +44,7 @@ public class Playing extends State implements Statemethods {
         levelManager = new LevelManager(game);
         objectManager = new ObjectManager(this);
 
-        player = new Player(200, 200, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE));
+        player = new Player(100 * Game.SCALE, 250 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
     }
@@ -113,7 +113,7 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (!paused) {
+        if (!paused && !player.getIsDead()) {
             if (e.getButton() == MouseEvent.BUTTON1)
                 player.setAttacking(true);
         }
@@ -121,7 +121,7 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!paused) {
+        if (!paused && !player.getIsDead()) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
@@ -155,7 +155,7 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (!paused) {
+        if (!paused && !player.getIsDead()) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
@@ -171,6 +171,21 @@ public class Playing extends State implements Statemethods {
             }
         }
 
+    }
+
+    public void checkWaterTouched(Player player) {
+        objectManager.checkWaterTouched(player);
+    }
+
+    public void windowFocusLost() {
+        player.resetDirBooleans();
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+    public ObjectManager getObjectManager() {
+        return objectManager;
     }
 
     @Override
@@ -189,17 +204,6 @@ public class Playing extends State implements Statemethods {
     public void mouseMoved(MouseEvent e) {
         // TODO Auto-generated method stub
 
-    }
-
-    public void windowFocusLost() {
-        player.resetDirBooleans();
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-    public ObjectManager getObjectManager() {
-        return objectManager;
     }
 
 }

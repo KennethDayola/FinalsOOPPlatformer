@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 import main.Game;
 public class LoadSave {
 
-    public static final String PLAYER_ATLAS = "spritesheet3.png";
+    public static final String PLAYER_ATLAS = "spritesheet4.png";
     public static final String LEVEL_ATLAS = "tilesgrass.png";
     public static final String LEVEL_ONE_DATA = "lvl_one_data.png";
     public static final String MENU_PLAYBTN = "playButtonSprite.png";

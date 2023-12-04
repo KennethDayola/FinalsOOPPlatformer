@@ -6,9 +6,12 @@ import static utilz.HelpMethods.*;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
+import gamestates.Playing;
 import utilz.LoadSave;
 import main.Game;
 public class Player extends Entity {
+
+    private Playing playing;
     private BufferedImage[][] animations;
     private int aniTick, aniIndex, aniSpeed = 25;
     private int playerAction = IDLE;
@@ -26,25 +29,41 @@ public class Player extends Entity {
     private float fallSpeedAfterCollision = 0.5f * Game.SCALE;
     private boolean inAir = false;
 
+    private boolean isDead = false;
+    private long deathTimestamp;
+    private long deathDelay = 2000;
+    private boolean deathAniPlayed = false;
+
     private int flipX = 0;
     private int flipW = 1;
 
-    public Player(float x, float y, int width, int height) {
+    public Player(float x, float y, int width, int height, Playing playing) {
         super(x, y, width, height);
         loadAnimations();
         initHitbox(x, y, (int) (20 * Game.SCALE), (int) (47 * Game.SCALE));
+        this.playing = playing;
     }
     public void update() {
         updatePos();
+        if (moving){
+            checkWaterTouched();
+        }
         updateAnimationTick();
         setAnimation();
     }
 
     public void render(Graphics g, int lvlOffset) {
-        g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
-//		drawHitbox(g);
+        if (isDead && !deathAniPlayed) {
+            g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
+            if (aniIndex == 4) {
+                deathAniPlayed = true;
+            }
+        } else if (deathAniPlayed){
+            g.drawImage(animations[playerAction][5], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
+        }else if (!isDead) {
+            g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
+        }
     }
-
     private void updateAnimationTick() {
         aniTick++;
         if (aniTick >= aniSpeed) {
@@ -62,10 +81,11 @@ public class Player extends Entity {
     private void setAnimation() {
         int startAni = playerAction;
 
-        if (moving)
+        if (playerAction != DEATH && moving)
             playerAction = RUNNING;
-        else
+        else if (playerAction != DEATH)
             playerAction = IDLE;
+
         if (inAir) {
             if (airSpeed < 0)
                 playerAction = JUMP;
@@ -73,11 +93,18 @@ public class Player extends Entity {
                 playerAction = FALLING;
         }
 
-
         int ATTACK_1 = 1;
         if (attacking)
             playerAction = ATTACK_1;
 
+        if (isDead) {
+            long currentTime = System.currentTimeMillis();
+            resetDirBooleans();
+            if (currentTime - deathTimestamp >= deathDelay) {
+                isDead = false;
+                playing.resetAll();
+            }
+        }
         if (startAni != playerAction)
             resetAniTick();
     }
@@ -160,12 +187,23 @@ public class Player extends Entity {
 
     private void loadAnimations() {
         BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
-            animations = new BufferedImage[4][22];
+            animations = new BufferedImage[5][22];
             for (int j = 0; j < animations.length; j++)
                 for (int i = 0; i < animations[j].length; i++)
                     animations[j][i] = img.getSubimage(i * 64, j * 64, 64, 64);
 
 
+    }
+
+    private void checkWaterTouched() {
+        playing.checkWaterTouched(this);
+    }
+
+
+    public void kill() {
+        playerAction = DEATH;
+        isDead = true;
+        deathTimestamp = System.currentTimeMillis();
     }
 
     public void resetDirBooleans() {
@@ -184,6 +222,7 @@ public class Player extends Entity {
         inAir = false;
         attacking = false;
         moving = false;
+        deathAniPlayed = false;
         playerAction = IDLE;
 
         hitbox.x = x;
@@ -191,6 +230,9 @@ public class Player extends Entity {
 
         if (!IsEntityOnFloor(hitbox, lvlData))
             inAir = true;
+    }
+    public boolean getIsDead(){
+        return isDead;
     }
     public void setAttacking(boolean attacking) {
         this.attacking = attacking;
@@ -230,4 +272,5 @@ public class Player extends Entity {
     public void setJump(boolean jump) {
         this.jump = jump;
     }
+
 }
