@@ -13,23 +13,22 @@ public class Constants {
         public static final int FLAG_ANI = 5;
         public static final int FLAG_ANI2 = 6;
         public static final int FLAG_ANI3 = 7;
+        public static final int SPIKE_TOP = 8;
+        public static final int SPIKE_BOTTOM = 9;
+        public static final int PORTAL = 10;
+        public static final int E_KEY = 11;
+
         public static final int OBJECTS_DIMENSIONS_DEFAULT = 32;
         public static final int OBJECT_DIMENSIONS = (int) (OBJECTS_DIMENSIONS_DEFAULT * Game.SCALE);
 
         public static int GetSpriteAmount(int object_type) {
-            switch (object_type) {
-                case WATER_TOP1:
-                case WATER_TOP2:
-                case WATER_TOP3:
-                    return 4;
-                case FLAG_BASE:
-                case WATER_BASE:
-                    return 1;
-                case FLAG_ANI:
-                case FLAG_ANI2:
-                    return 9;
-            }
-            return 1;
+            return switch (object_type) {
+                case WATER_TOP1, WATER_TOP2, WATER_TOP3 -> 4;
+                case FLAG_BASE, SPIKE_TOP, SPIKE_BOTTOM, WATER_BASE, E_KEY -> 1;
+                case FLAG_ANI, FLAG_ANI2 -> 9;
+                case PORTAL -> 7;
+                default -> 1;
+            };
         }
     }
 

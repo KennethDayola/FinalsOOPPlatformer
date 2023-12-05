@@ -22,8 +22,6 @@ public class Menu extends State implements Statemethods {
         super(game);
         loadBackground();
         loadButtons();
-
-
     }
 
     private void loadBackground() {

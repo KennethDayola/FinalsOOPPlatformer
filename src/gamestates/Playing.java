@@ -75,12 +75,11 @@ public class Playing extends State implements Statemethods {
     }
 
     private void drawClouds(Graphics g) {
-
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 11; i++)
             g.drawImage(bigCloud, i * BG_ELEMENTS_WIDTH - (int) (xLvlOffset * 0.3), 0, BG_ELEMENTS_WIDTH, BG_ELEMENTS_HEIGHT, null);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 11; i++)
             g.drawImage(smallCloud, i * BG_ELEMENTS_WIDTH - (int) (xLvlOffset * 0.7), 0, BG_ELEMENTS_WIDTH, BG_ELEMENTS_HEIGHT, null);
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 11; i++)
             g.drawImage(smallTerrain, i * BG_ELEMENTS_WIDTH - (int) (xLvlOffset * 0.45), Game.GAME_HEIGHT - BG_ELEMENTS_HEIGHT, BG_ELEMENTS_WIDTH, BG_ELEMENTS_HEIGHT , null);
     }
 
@@ -136,8 +135,10 @@ public class Playing extends State implements Statemethods {
                     MusicMethods.runningSound.play();
                     break;
                 case KeyEvent.VK_SPACE:
-                    player.setJump(true);
-                    MusicMethods.jumpSound.play();
+                    if (!player.getInAir()) {
+                        player.setJump(true);
+                        MusicMethods.jumpSound.play();
+                    }
                     break;
                 case KeyEvent.VK_BACK_SPACE:
                     Gamestate.state = Gamestate.MENU;
@@ -145,7 +146,10 @@ public class Playing extends State implements Statemethods {
                 case KeyEvent.VK_P:
                     resetAll();
                     break;
-
+                case KeyEvent.VK_E:
+                    if (objectManager.getInPortal())
+                        Gamestate.state = Gamestate.MENU;
+                    break;
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
@@ -180,8 +184,15 @@ public class Playing extends State implements Statemethods {
 
     }
 
+
+    public void checkSpikesTouched(Player player) {
+        objectManager.checkSpikesTouched(player);
+    }
     public void checkWaterTouched(Player player) {
         objectManager.checkWaterTouched(player);
+    }
+    public void checkPortalTouched(Player player) {
+        objectManager.checkPortalTouched(player);
     }
     public void setCheckpoint(float x, float y) {
         player.setCheckpoint(x,y);
@@ -217,5 +228,4 @@ public class Playing extends State implements Statemethods {
         // TODO Auto-generated method stub
 
     }
-
 }

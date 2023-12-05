@@ -54,9 +54,19 @@ public class Player extends Entity {
         if (moving){
             checkWaterTouched();
             checkFlagTouched();
+            checkSpikesTouched();
+            checkPortalTouched();
         }
         updateAnimationTick();
         setAnimation();
+    }
+
+    private void checkPortalTouched() {
+        playing.checkPortalTouched(this);
+    }
+
+    private void checkSpikesTouched() {
+        playing.checkSpikesTouched(this);
     }
 
     private void checkFlagTouched() {

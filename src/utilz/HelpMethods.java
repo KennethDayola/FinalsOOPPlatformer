@@ -1,4 +1,5 @@
 package utilz;
+
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -7,10 +8,7 @@ import java.util.ArrayList;
 import static utilz.Constants.ObjectConstants.*;
 
 import main.Game;
-import objects.FlagAnimation;
-import objects.StillObjects;
-import objects.WaterTop;
-
+import objects.*;
 
 
 public class HelpMethods {
@@ -24,6 +22,20 @@ public class HelpMethods {
         return false;
     }
 
+    public static ArrayList<Portal> GetPortal(BufferedImage img) {
+        ArrayList<Portal> list = new ArrayList<>();
+
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == PORTAL)
+                    list.add(new Portal(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+            }
+
+        return list;
+    }
+
     public static ArrayList<WaterTop> GetWaterTop(BufferedImage img){
         ArrayList<WaterTop> list = new ArrayList<>();
         for (int j = 0; j < img.getHeight(); j++)
@@ -33,6 +45,22 @@ public class HelpMethods {
                 if (value == WATER_TOP1 || value == WATER_TOP2 || value == WATER_TOP3 )
                     list.add(new WaterTop(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
             }
+        return list;
+    }
+
+    public static ArrayList<Spike> GetSpikes(BufferedImage img) {
+        ArrayList<Spike> list = new ArrayList<>();
+
+        for (int j = 0; j < img.getHeight(); j++)
+            for (int i = 0; i < img.getWidth(); i++) {
+                Color color = new Color(img.getRGB(i, j));
+                int value = color.getBlue();
+                if (value == SPIKE_TOP)
+                    list.add(new Spike(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                else if (value == SPIKE_BOTTOM)
+                    list.add(new Spike(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+            }
+
         return list;
     }
 
@@ -59,6 +87,8 @@ public class HelpMethods {
                 Color color = new Color(img.getRGB(i, j));
                 int value = color.getBlue();
                 if (value == WATER_BASE || value == FLAG_BASE )
+                    list.add(new StillObjects(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
+                if (value == E_KEY)
                     list.add(new StillObjects(i * Game.TILES_SIZE, j * Game.TILES_SIZE, value));
             }
         return list;

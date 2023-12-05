@@ -19,15 +19,31 @@ public class ObjectManager {
     private ArrayList<WaterTop> waterTop;
     private ArrayList<StillObjects> stillObjects;
     private ArrayList<FlagAnimation> flagAni;
+    private ArrayList<Spike> spikes;
+    private ArrayList<Portal> portal;
+
     private BufferedImage[][]waterTopImg;
     private BufferedImage[]flagTopImg;
     private BufferedImage [] stillObjectsImg;
+    private BufferedImage [] spikeImg;
+    private BufferedImage [] portalImg;
+
+    private boolean inPortal = false;
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
         loadWaterAni();
         loadFLagAni();
-        loadStillImages();
+        loadPortal();
+        loadImg(LoadSave.STILL_OBJECTS);
+        loadImg(LoadSave.SPIKE);
+    }
+
+    private void loadPortal() {
+        BufferedImage portalAni = LoadSave.GetSpriteAtlas(LoadSave.PORTAL);
+        portalImg = new BufferedImage[7];
+        for (int i = 0; i < portalImg.length; i++)
+            portalImg[i] = portalAni.getSubimage(32 * i, 0, 32, 48);
     }
 
     private void loadFLagAni() {
@@ -46,17 +62,26 @@ public class ObjectManager {
             for (int i = 0; i < waterTopImg[j].length; i++)
                 waterTopImg[j][i] = waterAni.getSubimage(32 * i, 32 * j, 32, 32);
     }
-    private void loadStillImages(){
-        BufferedImage stillImgTemp = LoadSave.GetSpriteAtlas(LoadSave.STILL_OBJECTS);
-        stillObjectsImg = new BufferedImage[2];
-        for (int i = 0; i < stillObjectsImg.length; i++)
-            stillObjectsImg[i] = stillImgTemp.getSubimage(32 * i, 0, 32, 32);
+    private void loadImg(String filePath){
+        BufferedImage imgTemp = LoadSave.GetSpriteAtlas(filePath);
+        if (filePath.equals(LoadSave.STILL_OBJECTS)) {
+            stillObjectsImg = new BufferedImage[3];
+            for (int i = 0; i < stillObjectsImg.length; i++)
+                stillObjectsImg[i] = imgTemp.getSubimage(32 * i, 0, 32, 32);
+        }
+        else if (filePath.equals(LoadSave.SPIKE)){
+            spikeImg = new BufferedImage[2];
+            for (int i = 0; i < spikeImg.length; i++)
+                spikeImg[i] = imgTemp.getSubimage(32 * i, 0, 32, 32);
+        }
     }
     public void update(){
         for (WaterTop w: waterTop)
             w.update();
         for (FlagAnimation f: flagAni)
             f.update();
+        for (Portal p: portal)
+            p.update();
     }
     public void checkWaterTouched(Player p) {
         for (WaterTop w : waterTop)
@@ -93,10 +118,26 @@ public class ObjectManager {
         }
     }
 
+    public void checkPortalTouched(Player player) {
+        for (Portal p : portal)
+            if (p.getHitbox().intersects(player.getHitbox()))
+                inPortal = true;
+            else
+                inPortal = false;
+    }
+
+    public void checkSpikesTouched(Player p) {
+        for (Spike s : spikes)
+            if (s.getHitbox().intersects(p.getHitbox()))
+                p.kill();
+    }
+
     public void loadObjects(Level newLevel) {
         waterTop = newLevel.getWaterTop();
         stillObjects = newLevel.getStillObjects();
         flagAni = newLevel.getFlagAni();
+        spikes = newLevel.getSpikes();
+        portal = newLevel.getPortal();
     }
     public void draw(Graphics g, int xLvlOffset) {
         drawObjects(g, xLvlOffset);
@@ -113,11 +154,17 @@ public class ObjectManager {
                     (int) (w.getHitbox().y - w.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
         }
         for (StillObjects s: stillObjects){
-            int type = 0;
+            if (s.getObjType() == FLAG_BASE)
+                g.drawImage(stillObjectsImg[0], (int) (s.getHitbox().x - s.getxDrawOffset() - xLvlOffset),
+                        (int) (s.getHitbox().y - s.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
             if (s.getObjType() == WATER_BASE)
-                type = 1;
-            g.drawImage(stillObjectsImg[type], (int) (s.getHitbox().x - s.getxDrawOffset() - xLvlOffset),
-                    (int) (s.getHitbox().y - s.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+                g.drawImage(stillObjectsImg[1], (int) (s.getHitbox().x - s.getxDrawOffset() - xLvlOffset),
+                        (int) (s.getHitbox().y - s.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+            if (s.getObjType() == E_KEY)
+                if (inPortal)
+                    g.drawImage(stillObjectsImg[2], (int) (s.getHitbox().x - s.getxDrawOffset() - xLvlOffset),
+                        (int) (s.getHitbox().y - s.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+
         }
         for (FlagAnimation f: flagAni){
             if (!f.doAnimation) {
@@ -137,11 +184,24 @@ public class ObjectManager {
                 }
             }
         }
-
+        for (Spike s : spikes) {
+            int type = 0;
+            if (s.getObjType() == SPIKE_TOP)
+                type = 1;
+            g.drawImage(spikeImg[type], (int) (s.getHitbox().x - s.getxDrawOffset() - xLvlOffset),
+                    (int) (s.getHitbox().y - s.getyDrawOffset()), OBJECT_DIMENSIONS, OBJECT_DIMENSIONS, null);
+        }
+        for (Portal p: portal){
+            g.drawImage(portalImg[p.getAniIndex()],(int) (p.getHitbox().x - p.getxDrawOffset() - xLvlOffset),
+                    (int) (p.getHitbox().y - p.getyDrawOffset()), OBJECT_DIMENSIONS, (int) (68*Game.SCALE), null);
+        }
     }
     private void drawWaterHitbox(Graphics g, WaterTop waterTop, int xLvlOffset) {
         g.setColor(Color.BLUE);
         g.drawRect((int) (waterTop.getHitbox().x - xLvlOffset), (int) waterTop.getHitbox().y,
                 (int) waterTop.getHitbox().width, (int) waterTop.getHitbox().height);
+    }
+    public boolean getInPortal(){
+        return inPortal;
     }
 }
