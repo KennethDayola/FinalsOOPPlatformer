@@ -51,6 +51,14 @@ public class Player extends Entity {
 
     public void update() {
         updatePos();
+        if (isDead) {
+            long currentTime = System.currentTimeMillis();
+            resetDirBooleans();
+            if (currentTime - deathTimestamp >= deathDelay) {
+                isDead = false;
+                playing.resetAll();
+            }
+        }
         if (moving){
             checkWaterTouched();
             checkFlagTouched();
@@ -107,7 +115,7 @@ public class Player extends Entity {
         else if (playerAction != DEATH)
             playerAction = IDLE;
 
-        if (inAir) {
+        if (inAir && !isDead) {
             if (airSpeed < 0)
                 playerAction = JUMP;
             else
@@ -118,14 +126,7 @@ public class Player extends Entity {
         if (attacking)
             playerAction = ATTACK_1;
 
-        if (isDead) {
-            long currentTime = System.currentTimeMillis();
-            resetDirBooleans();
-            if (currentTime - deathTimestamp >= deathDelay) {
-                isDead = false;
-                playing.resetAll();
-            }
-        }
+
         if (startAni != playerAction)
             resetAniTick();
     }
@@ -232,6 +233,7 @@ public class Player extends Entity {
         right = false;
         up = false;
         down = false;
+        jump = false;
     }
     public void loadLvlData(int[][] lvlData) {
         this.lvlData = lvlData;

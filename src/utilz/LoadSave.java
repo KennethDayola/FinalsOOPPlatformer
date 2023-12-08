@@ -15,7 +15,7 @@ public class LoadSave {
     public static final String LEVEL_ONE_DATA = "lvl_one_data.png";
     public static final String MENU_PLAYBTN = "playButtonSprite.png";
     public static final String MENU_EXITOPTIONSBTN = "settingsExitSprite.png";
-    public static final String MENU_BACKGROUND = "menuBg.png";
+    public static final String MENU_BACKGROUND = "menuBg.gif";
     public static final String PLAYING_BG_IMG = "playing_bg_img.png";
     public static final String BIG_CLOUDS = "big_clouds.png";
     public static final String SMALL_CLOUDS = "small_clouds.png";

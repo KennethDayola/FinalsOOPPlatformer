@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
+import gamestates.Story;
 import utilz.Constants;
 import utilz.MusicMethods;
 
@@ -17,6 +18,7 @@ public class Game implements Runnable {
 
     private Playing playing;
     private Menu menu;
+    private Story story;
 
     public final static int TILES_DEFAULT_SIZE = 32;
     public final static float SCALE = 2f;
@@ -55,6 +57,7 @@ public class Game implements Runnable {
     private void initClasses() {
         menu = new Menu(this);
         playing = new Playing(this);
+        story = new Story(this);
     }
 
     private void startGameLoop() {
@@ -70,6 +73,9 @@ public class Game implements Runnable {
             case PLAYING:
                 playing.update();
                 break;
+            case STORY:
+                playing.update();
+                story.update();
             case OPTIONS:
             case QUIT:
             default:
@@ -86,6 +92,9 @@ public class Game implements Runnable {
             case PLAYING:
                 playing.draw(g);
                 break;
+            case STORY:
+                playing.draw(g);
+                story.draw(g);
             default:
                 break;
         }

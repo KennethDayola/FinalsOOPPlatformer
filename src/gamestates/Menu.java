@@ -1,8 +1,12 @@
 package gamestates;
 
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import javax.swing.ImageIcon;
+import javax.swing.Timer;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import main.Game;
@@ -13,10 +17,12 @@ import utilz.MusicMethods;
 import static utilz.Constants.UI.Buttons.*;
 
 public class Menu extends State implements Statemethods {
-
     private MenuButton[] button = new MenuButton[3];
     private BufferedImage backgroundImg;
-
+    private Image backgroundGif;
+    private boolean isBackgroundGifDrawn = false;
+    private boolean showGifBg = true;
+    private Timer timer;
 
     public Menu(Game game) {
         super(game);
@@ -24,8 +30,22 @@ public class Menu extends State implements Statemethods {
         loadButtons();
     }
 
+    private void startTimer() {
+        timer = new Timer(2500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showGifBg = false;
+                isBackgroundGifDrawn = false;
+            }
+        });
+
+        timer.setRepeats(false);
+        timer.start();
+    }
+
     private void loadBackground() {
         backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
+        backgroundGif = new ImageIcon("res/menu.gif").getImage();
     }
 
     private void loadButtons() {
@@ -42,10 +62,16 @@ public class Menu extends State implements Statemethods {
 
     @Override
     public void draw(Graphics g) {
-        g.drawImage(backgroundImg, 0 ,0 , Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+        if (showGifBg) {
+            g.drawImage(backgroundGif, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
+            isBackgroundGifDrawn = true;
+        }
+        if (isBackgroundGifDrawn)
+            startTimer();
+        if (!showGifBg)
+            g.drawImage(backgroundImg,0,0,Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
         for (MenuButton mb : button)
             mb.draw(g);
-
     }
 
     @Override

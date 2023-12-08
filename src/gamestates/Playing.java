@@ -135,9 +135,10 @@ public class Playing extends State implements Statemethods {
                     MusicMethods.runningSound.play();
                     break;
                 case KeyEvent.VK_SPACE:
-                    if (!player.getInAir()) {
+                    if (!player.getIsDead()) {
                         player.setJump(true);
-                        MusicMethods.jumpSound.play();
+                        if (!player.getInAir())
+                            MusicMethods.jumpSound.play();
                     }
                     break;
                 case KeyEvent.VK_BACK_SPACE:
@@ -177,8 +178,10 @@ public class Playing extends State implements Statemethods {
                     MusicMethods.runningSound.stopLoop();
                     break;
                 case KeyEvent.VK_SPACE:
-                    player.setJump(false);
-                    break;
+                    if (!player.getIsDead()) {
+                        player.setJump(false);
+                        break;
+                    }
             }
         }
 
