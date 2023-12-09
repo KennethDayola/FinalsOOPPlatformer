@@ -1,7 +1,6 @@
 package gamestates;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -29,7 +28,10 @@ public class Playing extends State implements Statemethods {
     private int maxTilesOffset = lvlTilesWide - Game.TILES_IN_WIDTH;
     private int maxLvlOffsetX = maxTilesOffset * Game.TILES_SIZE;
     private BufferedImage backgroundImg, bigCloud, smallCloud, bigRock, smallTerrain;
-    private boolean paused = false, gameOver = false;
+    private BufferedImage completedScreen;
+    private boolean paused = false, gameOver = false, spawnPlayer = false, completed = false;
+    private long startTime;
+    private int gameTimer;
 
     public Playing(Game game) {
         super(game);
@@ -39,14 +41,17 @@ public class Playing extends State implements Statemethods {
         bigCloud = LoadSave.GetSpriteAtlas(LoadSave.BIG_CLOUDS);
         smallCloud = LoadSave.GetSpriteAtlas(LoadSave.SMALL_CLOUDS);
         smallTerrain = LoadSave.GetSpriteAtlas(LoadSave.SMALL_TERRAIN);
+        completedScreen = LoadSave.GetSpriteAtlas(LoadSave.COMPLETED_SCREEN);
         objectManager.loadObjects(levelManager.getCurrentLevel());
+
+        startTime = System.currentTimeMillis();
     }
 
     private void initClasses() {
         levelManager = new LevelManager(game);
         objectManager = new ObjectManager(this);
 
-        player = new Player(100 * Game.SCALE, 250 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
+        player = new Player(11000 * Game.SCALE, 250 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
     }
@@ -55,8 +60,17 @@ public class Playing extends State implements Statemethods {
     public void update() {
             levelManager.update();
             objectManager.update();
-            player.update();
+            if (spawnPlayer)
+                player.update();
             checkCloseToBorder();
+            if (!completed)
+                gameTimerUpdate();
+    }
+
+    private void gameTimerUpdate() {
+        long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - startTime;
+        gameTimer = (int) (elapsedTime / 1000);
     }
 
     @Override
@@ -65,12 +79,30 @@ public class Playing extends State implements Statemethods {
         drawClouds(g);
         
         levelManager.draw(g, xLvlOffset);
-        player.render(g, xLvlOffset);
+        if (spawnPlayer)
+            player.render(g, xLvlOffset);
         objectManager.draw(g, xLvlOffset);
 
-        if (paused){
-            g.setColor(new Color(0,0,0,100));
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("MS Reference Sans Serif", Font.BOLD, 16));
+        g.drawString("Time: " + gameTimer + "s", Game.GAME_WIDTH - 100, 20);
+
+        if (paused || completed){
+            g.setColor(new Color(0,0,0,200));
             g.fillRect(0,0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+            if (completed){
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+                int minutes = gameTimer / 60;
+                int seconds = gameTimer % 60;
+
+                g.drawImage(completedScreen,0,0, (int) (Game.ORIG_WIDTH * Game.SCALE), (int) (Game.ORIG_HEIGHT * Game.SCALE), null);
+
+                g2d.setColor(Color.WHITE);
+                g2d.setFont(new Font("Comic Sans MS", Font.BOLD, 37));
+                g2d.drawString("Time: " + minutes + "m " + seconds + "s", (int) (342 * Game.SCALE), (int) (330 * Game.SCALE));
+            }
         }
     }
 
@@ -114,7 +146,7 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (!paused && !player.getIsDead()) {
+        if (!paused && !player.getIsDead() && !completed) {
             if (e.getButton() == MouseEvent.BUTTON1)
                 player.setAttacking(true);
         }
@@ -122,7 +154,7 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!paused && !player.getIsDead()) {
+        if (!paused && !player.getIsDead() && !completed) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
@@ -135,11 +167,9 @@ public class Playing extends State implements Statemethods {
                     MusicMethods.runningSound.play();
                     break;
                 case KeyEvent.VK_SPACE:
-                    if (!player.getIsDead()) {
-                        player.setJump(true);
-                        if (!player.getInAir())
-                            MusicMethods.jumpSound.play();
-                    }
+                    player.setJump(true);
+                    if (!player.getInAir())
+                        MusicMethods.jumpSound.play();
                     break;
                 case KeyEvent.VK_BACK_SPACE:
                     Gamestate.state = Gamestate.MENU;
@@ -148,13 +178,30 @@ public class Playing extends State implements Statemethods {
                     resetAll();
                     break;
                 case KeyEvent.VK_E:
-                    if (objectManager.getInPortal())
-                        Gamestate.state = Gamestate.MENU;
+                    if (objectManager.getInPortal()) {
+                        MusicMethods.bgm.stopGameMusic();
+                        completed = true;
+                        MusicMethods.successSound.play();
+
+                    }
+                    break;
+                case KeyEvent.VK_L:
+                    System.out.println("Switching to STORY state");
+                    player.resetDirBooleans();
+                    Gamestate.state = Gamestate.STORY;
                     break;
             }
         }
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE){
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             togglePause();
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if (completed) {
+                gameTimer = 0;
+                resetAll();
+                Gamestate.state = Gamestate.MENU;
+                MusicMethods.bgm.play();
+            }
         }
     }
 
@@ -165,7 +212,7 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (!paused && !player.getIsDead()) {
+        if (!paused && !player.getIsDead() && !completed) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
@@ -178,10 +225,9 @@ public class Playing extends State implements Statemethods {
                     MusicMethods.runningSound.stopLoop();
                     break;
                 case KeyEvent.VK_SPACE:
-                    if (!player.getIsDead()) {
-                        player.setJump(false);
-                        break;
-                    }
+                    player.setJump(false);
+                    break;
+
             }
         }
 
@@ -200,6 +246,9 @@ public class Playing extends State implements Statemethods {
     public void setCheckpoint(float x, float y) {
         player.setCheckpoint(x,y);
     }
+    public void setSpawnPlayer(boolean spawn){
+        this.spawnPlayer = spawn;
+    }
     public void windowFocusLost() {
         player.resetDirBooleans();
     }
@@ -212,6 +261,9 @@ public class Playing extends State implements Statemethods {
     }
     public void checkFlagTouched(Player player) {
         objectManager.checkFlagTouched(player);
+    }
+    public Story getStory() {
+        return game.getStory();
     }
 
     @Override

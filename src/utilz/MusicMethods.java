@@ -18,11 +18,13 @@ public class MusicMethods {
 
     public static MusicMethods bgm = new MusicMethods();
     public static MusicMethods hoverSound = new MusicMethods();
+    public static MusicMethods spikeHit = new MusicMethods();
     public static MusicMethods clickSound = new MusicMethods();
     public static MusicMethods jumpSound = new MusicMethods();
-    public static MusicMethods deathSound = new MusicMethods();
+    public static MusicMethods waterDeathSound = new MusicMethods();
     public static MusicMethods checkpointSound = new MusicMethods();
     public static MusicMethods runningSound = new MusicMethods();
+    public static MusicMethods successSound = new MusicMethods();
 
     public static final String MENU_MUSIC = "/res/InDreamlandbyChillpeach.wav";
     public static final String GAME_MUSIC = "/res/game_music.wav";
@@ -32,14 +34,18 @@ public class MusicMethods {
     public static final String WATER_DEATH_SOUND = "/res/waterSplash.wav";
     public static final String CHECKPOINT_SOUND = "/res/checkpointSound.wav";
     public static final String RUNNING_SOUND = "/res/runningSound.wav";
+    public static final String SPIKE_HIT = "/res/spikeHit.wav";
+    public static final String SUCCESS_SOUND = "/res/successSound.wav";
 
     public static void initMusic(){
         MusicMethods.clickSound.loadMusic(MusicMethods.CLICK_MUSIC);
         MusicMethods.hoverSound.loadMusic(MusicMethods.HOVER_MUSIC);
         MusicMethods.jumpSound.loadMusic(MusicMethods.JUMP_SOUND);
-        MusicMethods.deathSound.loadMusic(MusicMethods.WATER_DEATH_SOUND);
+        MusicMethods.waterDeathSound.loadMusic(MusicMethods.WATER_DEATH_SOUND);
         MusicMethods.checkpointSound.loadMusic(MusicMethods.CHECKPOINT_SOUND);
         MusicMethods.runningSound.loadMusic(MusicMethods.RUNNING_SOUND);
+        MusicMethods.spikeHit.loadMusic(MusicMethods.SPIKE_HIT);
+        MusicMethods.successSound.loadMusic(MusicMethods.SUCCESS_SOUND);
         MusicMethods.bgm.loadMusic(MusicMethods.MENU_MUSIC);
         MusicMethods.bgm.loadGameMusic();
     }
@@ -59,9 +65,7 @@ public class MusicMethods {
     public void play() {
         if (!musicPlayed){
             musicPlayed = true;
-            if (clip.isRunning()){
-                clip.setMicrosecondPosition(0);
-            }
+            clip.setMicrosecondPosition(0);
             if (loadedFilePath.equals(MENU_MUSIC)) {
                 if (loadedFilePath.equals(RUNNING_SOUND))
                     setVolume(0.7f);

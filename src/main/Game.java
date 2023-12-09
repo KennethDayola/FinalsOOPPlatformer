@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.Graphics;
+import java.awt.event.MouseListener;
+
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
@@ -27,6 +29,8 @@ public class Game implements Runnable {
     public final static int TILES_SIZE = (int) (TILES_DEFAULT_SIZE * SCALE);
     public final static int GAME_WIDTH = TILES_SIZE * TILES_IN_WIDTH;
     public final static int GAME_HEIGHT = TILES_SIZE * TILES_IN_HEIGHT;
+    public final static int ORIG_WIDTH = 832;
+    public final static int ORIG_HEIGHT = 448;
 
     public Game() {
         initClasses();
@@ -36,6 +40,7 @@ public class Game implements Runnable {
         MusicMethods.bgm.play();
         gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
+        gamePanel.setFocusable(true);
         gamePanel.requestFocus();
 
         startGameLoop();
@@ -76,6 +81,7 @@ public class Game implements Runnable {
             case STORY:
                 playing.update();
                 story.update();
+                break;
             case OPTIONS:
             case QUIT:
             default:
@@ -95,6 +101,7 @@ public class Game implements Runnable {
             case STORY:
                 playing.draw(g);
                 story.draw(g);
+                break;
             default:
                 break;
         }
@@ -156,5 +163,9 @@ public class Game implements Runnable {
 
     public Playing getPlaying() {
         return playing;
+    }
+
+    public Story getStory() {
+        return story;
     }
 }

@@ -1,6 +1,7 @@
 package objects;
 
 import entities.Player;
+import gamestates.Gamestate;
 import gamestates.Playing;
 import levels.Level;
 import main.Game;
@@ -28,7 +29,7 @@ public class ObjectManager {
     private BufferedImage [] spikeImg;
     private BufferedImage [] portalImg;
 
-    private boolean inPortal = false;
+    private boolean inPortal = false, portalTouched = false;
 
     public ObjectManager(Playing playing) {
         this.playing = playing;
@@ -86,7 +87,7 @@ public class ObjectManager {
     public void checkWaterTouched(Player p) {
         for (WaterTop w : waterTop)
             if (w.getHitbox().intersects(p.getHitbox())) {
-                MusicMethods.deathSound.play();
+                MusicMethods.waterDeathSound.play();
                 p.kill();
             }
     }
@@ -106,6 +107,7 @@ public class ObjectManager {
                     if(!f.soundPlayedCheckpoint2){
                         MusicMethods.checkpointSound.play();
                         f.soundPlayedCheckpoint2 = true;
+                        applyStoryState(2);
                     }
                 }else if (f.getObjType() == FLAG_ANI3) {
                     playing.setCheckpoint(8128 * Game.SCALE, 180 * Game.SCALE);
@@ -120,16 +122,23 @@ public class ObjectManager {
 
     public void checkPortalTouched(Player player) {
         for (Portal p : portal)
-            if (p.getHitbox().intersects(player.getHitbox()))
+            if (p.getHitbox().intersects(player.getHitbox())) {
                 inPortal = true;
+                if (!portalTouched) {
+                    applyStoryState(3);
+                    portalTouched = true;
+                }
+            }
             else
                 inPortal = false;
     }
 
     public void checkSpikesTouched(Player p) {
         for (Spike s : spikes)
-            if (s.getHitbox().intersects(p.getHitbox()))
+            if (s.getHitbox().intersects(p.getHitbox())) {
+                MusicMethods.spikeHit.play();
                 p.kill();
+            }
     }
 
     public void loadObjects(Level newLevel) {
@@ -196,6 +205,13 @@ public class ObjectManager {
                     (int) (p.getHitbox().y - p.getyDrawOffset()), OBJECT_DIMENSIONS, (int) (68*Game.SCALE), null);
         }
     }
+
+    private void applyStoryState(int storyFlag){
+        playing.getPlayer().resetDirBooleans();
+        Gamestate.state = Gamestate.STORY;
+        playing.getStory().setStoryFlag(storyFlag);
+    }
+
     private void drawWaterHitbox(Graphics g, WaterTop waterTop, int xLvlOffset) {
         g.setColor(Color.BLUE);
         g.drawRect((int) (waterTop.getHitbox().x - xLvlOffset), (int) waterTop.getHitbox().y,
