@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 
 import main.Game;
-import ui.MenuButton;
+import OtherComponents.MenuButton;
 import utilz.LoadSave;
 import utilz.MusicMethods;
 
@@ -86,6 +86,9 @@ public class Menu extends State implements Statemethods {
             if (isIn(e, mb)) {
                 mb.setMousePressed(true);
                 MusicMethods.clickSound.play();
+                if (game.getPlaying().getCompleted())
+                    game.getStory().setDialogueIndex(0);
+                game.getPlaying().setCompleted(false);
             }
         }
 

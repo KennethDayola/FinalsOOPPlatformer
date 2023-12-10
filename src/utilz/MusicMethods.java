@@ -20,25 +20,29 @@ public class MusicMethods {
     public static MusicMethods hoverSound = new MusicMethods();
     public static MusicMethods spikeHit = new MusicMethods();
     public static MusicMethods clickSound = new MusicMethods();
+    public static MusicMethods vnClickSound = new MusicMethods();
     public static MusicMethods jumpSound = new MusicMethods();
     public static MusicMethods waterDeathSound = new MusicMethods();
     public static MusicMethods checkpointSound = new MusicMethods();
     public static MusicMethods runningSound = new MusicMethods();
     public static MusicMethods successSound = new MusicMethods();
+    public static MusicMethods portalSound = new MusicMethods();
 
     public static final String MENU_MUSIC = "/res/InDreamlandbyChillpeach.wav";
     public static final String GAME_MUSIC = "/res/game_music.wav";
     public static final String HOVER_MUSIC = "/res/Retro12.wav";
     public static final String CLICK_MUSIC = "/res/Retro1.wav";
+    public static final String VN_CLICK_SOUND = "/res/clickMusic.wav";
     public static final String JUMP_SOUND = "/res/jump.wav";
     public static final String WATER_DEATH_SOUND = "/res/waterSplash.wav";
     public static final String CHECKPOINT_SOUND = "/res/checkpointSound.wav";
     public static final String RUNNING_SOUND = "/res/runningSound.wav";
     public static final String SPIKE_HIT = "/res/spikeHit.wav";
     public static final String SUCCESS_SOUND = "/res/successSound.wav";
-
+    public static final String PORTAL_SOUND = "/res/portalSound.wav";
     public static void initMusic(){
         MusicMethods.clickSound.loadMusic(MusicMethods.CLICK_MUSIC);
+        MusicMethods.vnClickSound.loadMusic(MusicMethods.VN_CLICK_SOUND);
         MusicMethods.hoverSound.loadMusic(MusicMethods.HOVER_MUSIC);
         MusicMethods.jumpSound.loadMusic(MusicMethods.JUMP_SOUND);
         MusicMethods.waterDeathSound.loadMusic(MusicMethods.WATER_DEATH_SOUND);
@@ -46,6 +50,7 @@ public class MusicMethods {
         MusicMethods.runningSound.loadMusic(MusicMethods.RUNNING_SOUND);
         MusicMethods.spikeHit.loadMusic(MusicMethods.SPIKE_HIT);
         MusicMethods.successSound.loadMusic(MusicMethods.SUCCESS_SOUND);
+        MusicMethods.portalSound.loadMusic(MusicMethods.PORTAL_SOUND);
         MusicMethods.bgm.loadMusic(MusicMethods.MENU_MUSIC);
         MusicMethods.bgm.loadGameMusic();
     }
@@ -67,12 +72,10 @@ public class MusicMethods {
             musicPlayed = true;
             clip.setMicrosecondPosition(0);
             if (loadedFilePath.equals(MENU_MUSIC)) {
-                if (loadedFilePath.equals(RUNNING_SOUND))
-                    setVolume(0.7f);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
             else if (loadedFilePath.equals(RUNNING_SOUND)){
-                setVolume(0.7f);
+                clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
             else if (loadedFilePath.equals(HOVER_MUSIC)){
                 clip.stop();
@@ -116,7 +119,6 @@ public class MusicMethods {
 
     public void stop() {
         clip.stop();
-        clip.close();
         musicPlayed = false;
     }
 
@@ -127,7 +129,6 @@ public class MusicMethods {
 
     public void stopGameMusic(){
         gameClip.stop();
-        gameClip.close();
     }
 
     public void setMusicPlayed(boolean isLoaded) {
@@ -141,6 +142,14 @@ public class MusicMethods {
             float gain = (range * volume) + gainControl.getMinimum();
             gainControl.setValue(gain);
         }
+    }
+
+    public Clip getClip() {
+        return clip;
+    }
+
+    public Clip getGameClip() {
+        return gameClip;
     }
 
     public boolean getMusicPlayed() {

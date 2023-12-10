@@ -2,7 +2,7 @@ package gamestates;
 
 import java.awt.event.MouseEvent;
 import main.Game;
-import ui.MenuButton;
+import OtherComponents.MenuButton;
 
 public class State {
 

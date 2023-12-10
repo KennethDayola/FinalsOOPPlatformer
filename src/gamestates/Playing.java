@@ -58,13 +58,25 @@ public class Playing extends State implements Statemethods {
 
     @Override
     public void update() {
-            levelManager.update();
-            objectManager.update();
-            if (spawnPlayer)
-                player.update();
-            checkCloseToBorder();
-            if (!completed)
+            if (!completed) {
+                levelManager.update();
+                objectManager.update();
+                if (spawnPlayer)
+                    player.update();
+                checkCloseToBorder();
                 gameTimerUpdate();
+                updateRunningSound();
+            }
+    }
+
+    private void updateRunningSound() {
+        if (getPlayer().getInAir())
+            MusicMethods.runningSound.stopLoop();
+        else if (!getPlayer().getInAir())
+            if (player.isLeft() || player.isRight())
+                MusicMethods.runningSound.play();
+            else
+                MusicMethods.runningSound.stopLoop();
     }
 
     private void gameTimerUpdate() {
@@ -79,7 +91,7 @@ public class Playing extends State implements Statemethods {
         drawClouds(g);
         
         levelManager.draw(g, xLvlOffset);
-        if (spawnPlayer)
+        if (spawnPlayer && !completed)
             player.render(g, xLvlOffset);
         objectManager.draw(g, xLvlOffset);
 
@@ -159,12 +171,14 @@ public class Playing extends State implements Statemethods {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
                     player.setLeft(true);
-                    MusicMethods.runningSound.play();
+//                    if (!getPlayer().getInAir())
+//                        MusicMethods.runningSound.play();
                     break;
                 case KeyEvent.VK_D:
                 case KeyEvent.VK_RIGHT:
                     player.setRight(true);
-                    MusicMethods.runningSound.play();
+//                    if (!getPlayer().getInAir())
+//                        MusicMethods.runningSound.play();
                     break;
                 case KeyEvent.VK_SPACE:
                     player.setJump(true);
@@ -197,10 +211,8 @@ public class Playing extends State implements Statemethods {
         }
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             if (completed) {
-                gameTimer = 0;
-                resetAll();
+                game.resetGame();
                 Gamestate.state = Gamestate.MENU;
-                MusicMethods.bgm.play();
             }
         }
     }
@@ -217,12 +229,12 @@ public class Playing extends State implements Statemethods {
                 case KeyEvent.VK_A:
                 case KeyEvent.VK_LEFT:
                     player.setLeft(false);
-                    MusicMethods.runningSound.stopLoop();
+//                    MusicMethods.runningSound.stopLoop();
                     break;
                 case KeyEvent.VK_D:
                 case KeyEvent.VK_RIGHT:
                     player.setRight(false);
-                    MusicMethods.runningSound.stopLoop();
+//                    MusicMethods.runningSound.stopLoop();
                     break;
                 case KeyEvent.VK_SPACE:
                     player.setJump(false);
@@ -233,7 +245,9 @@ public class Playing extends State implements Statemethods {
 
     }
 
-
+    public boolean getCompleted() {
+        return completed;
+    }
     public void checkSpikesTouched(Player player) {
         objectManager.checkSpikesTouched(player);
     }
@@ -249,10 +263,17 @@ public class Playing extends State implements Statemethods {
     public void setSpawnPlayer(boolean spawn){
         this.spawnPlayer = spawn;
     }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
+    public void setGameTimer(int time){
+        this.gameTimer = time;
+    }
     public void windowFocusLost() {
         player.resetDirBooleans();
     }
-
     public Player getPlayer() {
         return player;
     }
@@ -281,6 +302,5 @@ public class Playing extends State implements Statemethods {
     @Override
     public void mouseMoved(MouseEvent e) {
         // TODO Auto-generated method stub
-
     }
 }

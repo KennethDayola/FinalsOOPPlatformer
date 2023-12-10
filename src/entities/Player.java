@@ -206,21 +206,17 @@ public class Player extends Entity {
 
     }
 
-
     private void loadAnimations() {
         BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
             animations = new BufferedImage[5][22];
             for (int j = 0; j < animations.length; j++)
                 for (int i = 0; i < animations[j].length; i++)
                     animations[j][i] = img.getSubimage(i * 64, j * 64, 64, 64);
-
-
     }
 
     private void checkWaterTouched() {
         playing.checkWaterTouched(this);
     }
-
 
     public void kill() {
         playerAction = DEATH;
@@ -253,6 +249,11 @@ public class Player extends Entity {
 
         if (!IsEntityOnFloor(hitbox, lvlData))
             inAir = true;
+    }
+
+    public void setPlayerFacingRight(){
+        flipX = 0;
+        flipW = 1;
     }
     public boolean getIsDead(){
         return isDead;

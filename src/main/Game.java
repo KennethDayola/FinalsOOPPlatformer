@@ -1,13 +1,11 @@
 package main;
 
 import java.awt.Graphics;
-import java.awt.event.MouseListener;
 
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
 import gamestates.Story;
-import utilz.Constants;
 import utilz.MusicMethods;
 
 public class Game implements Runnable {
@@ -167,5 +165,19 @@ public class Game implements Runnable {
 
     public Story getStory() {
         return story;
+    }
+
+    public void resetGame() {
+        playing.setGameTimer(0);
+        playing.getPlayer().resetDirBooleans();
+        playing.setCheckpoint(100 * SCALE, 250 * SCALE);
+        playing.resetAll();
+        playing.getPlayer().setPlayerFacingRight();
+        story.setStoryFlag(1);
+        story.setClickCounter(0);
+
+        MusicMethods.bgm.getClip().setMicrosecondPosition(0);
+        MusicMethods.bgm.getGameClip().setMicrosecondPosition(0);
+        MusicMethods.bgm.play();
     }
 }

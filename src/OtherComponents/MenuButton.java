@@ -1,4 +1,4 @@
-package ui;
+package OtherComponents;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;

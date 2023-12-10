@@ -125,6 +125,7 @@ public class ObjectManager {
             if (p.getHitbox().intersects(player.getHitbox())) {
                 inPortal = true;
                 if (!portalTouched) {
+                    MusicMethods.portalSound.play();
                     applyStoryState(3);
                     portalTouched = true;
                 }
