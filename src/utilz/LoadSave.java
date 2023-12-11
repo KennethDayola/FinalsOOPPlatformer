@@ -26,6 +26,7 @@ public class LoadSave {
     public static final String FLAG_TOP = "flagTop.png";
     public static final String SPIKE = "spike.png";
     public static final String PORTAL = "greenPortal.png";
+    public static final String VN_SPRITE = "vnSprite.png";
     public static final String TEXT_BOX = "TextBox.png";
     public static final String COMPLETED_SCREEN = "completedScreen.png";
 

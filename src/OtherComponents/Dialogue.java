@@ -14,10 +14,13 @@ public class Dialogue {
             "So, here's the deal: I need your mad skills and your good vibes to help me get to that portal..",
             "Will we make it? Who knows? But one thing's for sure – this adventure is about to get wild. So, buckle up, my friends!",
             "We're on a sheet-rescue mission, and nothing's gonna stand in our way. To the portal and whatever awaits us on the other side!",
+            "Also in this platformer, my character and water have an agreement",
+            "I don't swim, and water doesn't try to turn me into an accidental deep-sea explorer. It's a one-sided deal, really.",
             "P.S.... Press P if you ever get stuck in a block. The developer didn't how to fix it anyways."},
 
             //SCENE 2
-            {"Alright, friends, here's the lowdown. Ahead lie some tricky spikes, the kind that make platformers a real nail-biter.",
+            {"",
+            "Alright, friends, here's the lowdown. Ahead lie some tricky spikes, the kind that make platformers a real nail-biter.",
             "Just wanted to give you a heads-up before we dive into the action.",
             "These spikes mean business, and one misstep, and well, you know the drill.",
             "Sure, I could go for the classic 'jump over them' move, but these aren't your average spikes. ",
@@ -25,7 +28,8 @@ public class Dialogue {
             "Buckle up, and let's hope the game physics are on my side today."},
 
             //SCENE 3
-            {"Well, well, look who's about to rewrite history – me! And you, my trusty audience.",
+            {"",
+            "Well, well, look who's about to rewrite history – me! And you, my trusty audience.",
             "Who would have thought our quest for a misplaced piece of paper would lead us to this dramatic moment?",
             "Shakespeare would be proud, or confused. Probably both.",
             "Behold, the portal! A swirling mix of ones and zeros, the VIP entrance to the good old days.",
@@ -35,7 +39,6 @@ public class Dialogue {
             "A moment to appreciate the sheer absurdity of this quest. A quest for a sheet of paper.",
             "I mean, couldn't my life have a more glamorous plot twist? Maybe a secret spy mission or discovering buried treasure?",
             "And you, my invisible companions, I owe you a debt of gratitude. The real MVPs in my pixelated escapades.",
-            "So, here's to you, the unsung heroes of this digital drama.",
             "May your pixels always shine bright, and your Wi-Fi connection be forever stable.",
             "Now, brace yourselves, because in a moment, we're stepping into the unknown.",
             "Or maybe just last Tuesday. Time is relative, after all."},

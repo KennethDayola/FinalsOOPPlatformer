@@ -51,22 +51,22 @@ public class Playing extends State implements Statemethods {
         levelManager = new LevelManager(game);
         objectManager = new ObjectManager(this);
 
-        player = new Player(11000 * Game.SCALE, 250 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
+        player = new Player(100 * Game.SCALE, 260 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
 
     }
 
     @Override
     public void update() {
-            if (!completed) {
-                levelManager.update();
-                objectManager.update();
-                if (spawnPlayer)
-                    player.update();
-                checkCloseToBorder();
-                gameTimerUpdate();
-                updateRunningSound();
-            }
+        if (!completed) {
+            levelManager.update();
+            objectManager.update();
+            if (spawnPlayer)
+                player.update();
+            checkCloseToBorder();
+            gameTimerUpdate();
+            updateRunningSound();
+        }
     }
 
     private void updateRunningSound() {

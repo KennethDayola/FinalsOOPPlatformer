@@ -84,7 +84,7 @@ public class MusicMethods {
             }
             else {
                 if (loadedFilePath.equals(CHECKPOINT_SOUND))
-                    setVolume(0.8f);
+                    setVolume(0.8f, clip);
                 clip.stop();
                 clip.setMicrosecondPosition(0);
                 clip.start();
@@ -110,8 +110,8 @@ public class MusicMethods {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
+                setVolume(0.85f, gameClip);
                 gameClip.loop(Clip.LOOP_CONTINUOUSLY);
-
                 timer.cancel();
             }
         }, 1300);
@@ -135,7 +135,7 @@ public class MusicMethods {
         this.musicPlayed = isLoaded;
     }
 
-    private void setVolume(float volume) {
+    private void setVolume(float volume, Clip clip) {
         if (clip.isControlSupported(FloatControl.Type.MASTER_GAIN)) {
             FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
             float range = gainControl.getMaximum() - gainControl.getMinimum();

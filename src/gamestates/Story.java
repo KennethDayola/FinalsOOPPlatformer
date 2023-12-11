@@ -22,7 +22,8 @@ public class Story extends State implements Statemethods{
     private BufferedImage textBox;
     private BufferedImage charSprite;
     private int dialogueIndex = 0, clickCounter = 0, clickCondition;
-    private int introOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
+    private int textBoxIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
+    private int charIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
     private Game game;
     private Dialogue dialogue = new Dialogue();
     private int storyFlag = 1;
@@ -36,6 +37,7 @@ public class Story extends State implements Statemethods{
 
     private void initImg() {
         textBox = LoadSave.GetSpriteAtlas(LoadSave.TEXT_BOX);
+        charSprite = LoadSave.GetSpriteAtlas(LoadSave.VN_SPRITE);
     }
 
     @Override
@@ -49,15 +51,20 @@ public class Story extends State implements Statemethods{
                 firstTextIteration = true;
                 startText = false;
                 drawnIntro = false;
+                textBoxIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
+                charIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
                 if (storyFlag == 1)
                     game.getPlaying().setSpawnPlayer(true);
             }
-            if (drawnIntro)
-                if (introOffset >= (int) (300 * Game.SCALE)) {
-                    introOffset -= 2;
+            if (drawnIntro) {
+                if (textBoxIntroOffset >= (int) (300 * Game.SCALE)) {
+                    textBoxIntroOffset -= (int) (1 * Game.SCALE);
                     startText = false;
                 }
-            if (introOffset <= (int) (300 * Game.SCALE))
+                if (charIntroOffset >= (int) (280 * Game.SCALE))
+                    charIntroOffset -= (int) (2 * Game.SCALE);
+            }
+            if (textBoxIntroOffset <= (int) (300 * Game.SCALE))
                 startText = true;
             if (firstTextIteration) {
                 displayText();
@@ -68,13 +75,13 @@ public class Story extends State implements Statemethods{
     private void updateClickCondition() {
         switch (storyFlag){
             case 1:
-                clickCondition = 13;
+                clickCondition = 15;
                 break;
             case 2:
-                clickCondition = 6;
+                clickCondition = 7;
                 break;
             case 3:
-                clickCondition = 14;
+                clickCondition = 15;
                 break;
         }
     }
@@ -88,15 +95,17 @@ public class Story extends State implements Statemethods{
             g.setColor(new Color(0, 0, 0, 100));
             g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
 
-            g.drawImage(textBox, 0, introOffset, (int) (Game.ORIG_WIDTH * Game.SCALE), (int) (140 * Game.SCALE), null);
+            g.drawImage(charSprite, charIntroOffset, 0, (int) (360 * Game.SCALE), (int) (448 * Game.SCALE), null);
+
+            g.drawImage(textBox, 0, textBoxIntroOffset, (int) (Game.ORIG_WIDTH * Game.SCALE), (int) (140 * Game.SCALE), null);
             drawnIntro = true;
 
             if (startText) {
                 g.setColor(Color.WHITE);
-                g.setFont(new Font("Bradley Hand ITC", Font.BOLD, 40));
+                g.setFont(new Font("Bradley Hand ITC", Font.BOLD, (int) (20 * Game.SCALE)));
                 g.drawString("• Criszel", 135, (int) (350 * Game.SCALE));
 
-                g.setFont(new Font("Comic Sans MS", Font.PLAIN, 22));
+                g.setFont(new Font("Comic Sans MS", Font.PLAIN, (int) (11 * Game.SCALE)));
                 g.drawString(currentText, 110, (int) (370 * Game.SCALE));
             }
         }
@@ -127,7 +136,7 @@ public class Story extends State implements Statemethods{
     }
 
     private void startTypewriterEffect(String text) {
-        int delay = 5; // Adjust the delay between characters
+        int delay = 3; // Adjust the delay between characters
         textTimer = new Timer(delay, new ActionListener() {
             int index = 0;
             @Override
@@ -148,6 +157,7 @@ public class Story extends State implements Statemethods{
 
     public void setStoryFlag(int storyFlag){
         this.storyFlag = storyFlag;
+        this.dialogueIndex = 0;
     }
 
     @Override

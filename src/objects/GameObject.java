@@ -24,9 +24,8 @@ public class GameObject {
     }
 
     protected void updateAnimationTick() {
-        if (objType == FLAG_ANI){
+        if (objType == FLAG_ANI || objType == FLAG_ANI2 || objType == FLAG_ANI3)
             aniSpeed = 20;
-        }
         aniTick++;
         if (aniTick >= aniSpeed) {
             aniTick = 0;
