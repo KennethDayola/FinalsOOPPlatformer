@@ -88,7 +88,7 @@ public class ObjectManager {
         for (WaterTop w : waterTop)
             if (w.getHitbox().intersects(p.getHitbox())) {
                 MusicMethods.waterDeathSound.play();
-                p.kill();
+                p.kill("water");
             }
     }
 
@@ -138,7 +138,7 @@ public class ObjectManager {
         for (Spike s : spikes)
             if (s.getHitbox().intersects(p.getHitbox())) {
                 MusicMethods.spikeHit.play();
-                p.kill();
+                p.kill("normal");
             }
     }
 

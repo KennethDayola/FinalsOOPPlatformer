@@ -33,6 +33,7 @@ public class Player extends Entity {
     private long deathTimestamp;
     private long deathDelay = 2000;
     private boolean deathAniPlayed = false;
+    private int deathAniEndIndex;
 
     private int flipX = 0;
     private int flipW = 1;
@@ -52,6 +53,10 @@ public class Player extends Entity {
     public void update() {
         updatePos();
         if (isDead) {
+            if (playerAction == DEATH)
+                deathAniEndIndex = 4;
+            else if (playerAction == WATER_DEATH)
+                deathAniEndIndex = 3;
             long currentTime = System.currentTimeMillis();
             resetDirBooleans();
             if (currentTime - deathTimestamp >= deathDelay) {
@@ -84,11 +89,11 @@ public class Player extends Entity {
     public void render(Graphics g, int lvlOffset) {
         if (isDead && !deathAniPlayed) {
             g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
-            if (aniIndex == 4) {
+            if (aniIndex == deathAniEndIndex) {
                 deathAniPlayed = true;
             }
         } else if (deathAniPlayed){
-            g.drawImage(animations[playerAction][5], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
+            g.drawImage(animations[playerAction][GetSpriteAmount(playerAction)], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
         }else if (!isDead) {
             g.drawImage(animations[playerAction][aniIndex], (int) (hitbox.x - xDrawOffset) - lvlOffset + flipX, (int) (hitbox.y - yDrawOffset), width * flipW, height, null);
         }
@@ -110,9 +115,9 @@ public class Player extends Entity {
     private void setAnimation() {
         int startAni = playerAction;
 
-        if (playerAction != DEATH && moving)
+        if (playerAction != DEATH && playerAction != WATER_DEATH && moving)
             playerAction = RUNNING;
-        else if (playerAction != DEATH)
+        else if (playerAction != DEATH && playerAction != WATER_DEATH)
             playerAction = IDLE;
 
         if (inAir && !isDead) {
@@ -170,7 +175,7 @@ public class Player extends Entity {
                 airSpeed += gravity;
                 updateXPos(xSpeed);
             } else {
-                hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed);
+                hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed, "player");
                 if (airSpeed > 0)
                     resetInAir();
                 else
@@ -208,7 +213,7 @@ public class Player extends Entity {
 
     private void loadAnimations() {
         BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.PLAYER_ATLAS);
-            animations = new BufferedImage[5][22];
+            animations = new BufferedImage[6][22];
             for (int j = 0; j < animations.length; j++)
                 for (int i = 0; i < animations[j].length; i++)
                     animations[j][i] = img.getSubimage(i * 64, j * 64, 64, 64);
@@ -218,8 +223,12 @@ public class Player extends Entity {
         playing.checkWaterTouched(this);
     }
 
-    public void kill() {
-        playerAction = DEATH;
+    public void kill(String deathType) {
+        aniIndex = 0;
+        if (deathType.equals("normal"))
+            playerAction = DEATH;
+        else if (deathType.equals("water"))
+            playerAction = WATER_DEATH;
         isDead = true;
         deathTimestamp = System.currentTimeMillis();
     }

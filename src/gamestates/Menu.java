@@ -22,6 +22,7 @@ public class Menu extends State implements Statemethods {
     private Image backgroundGif;
     private boolean isBackgroundGifDrawn = false;
     private boolean showGifBg = true;
+    private boolean firstLoading = true;
     private Timer timer;
 
     public Menu(Game game) {
@@ -62,6 +63,12 @@ public class Menu extends State implements Statemethods {
 
     @Override
     public void draw(Graphics g) {
+        g.setColor(new Color(68,108,163,255));
+        g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
+        if (firstLoading) {
+            showGifBg = false;
+            threadSleepForLoading();
+        }
         if (showGifBg) {
             g.drawImage(backgroundGif, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
             isBackgroundGifDrawn = true;
@@ -73,6 +80,29 @@ public class Menu extends State implements Statemethods {
         for (MenuButton mb : button)
             mb.draw(g);
     }
+
+    private void threadSleepForLoading() {
+        try {
+            Thread.sleep(1500);
+            showGifBg = true;
+            firstLoading = false;
+            startBgmTimer();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void startBgmTimer() {
+        Timer bgmTimer = new Timer(310, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MusicMethods.bgm.play();
+            }
+        });
+        bgmTimer.setRepeats(false); // Set to non-repeating
+        bgmTimer.start();
+    }
+
 
     @Override
     public void mouseClicked(MouseEvent e) {

@@ -33,9 +33,7 @@ public class Game implements Runnable {
     public Game() {
         initClasses();
         initMusic();
-        threadSleepForLoading();
 
-        MusicMethods.bgm.play();
         gamePanel = new GamePanel(this);
         gameWindow = new GameWindow(gamePanel);
         gamePanel.setFocusable(true);
@@ -46,15 +44,6 @@ public class Game implements Runnable {
 
     private void initMusic() {
         MusicMethods.initMusic();
-    }
-
-
-    private void threadSleepForLoading() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
     private void initClasses() {

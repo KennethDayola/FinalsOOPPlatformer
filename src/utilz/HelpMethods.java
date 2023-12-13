@@ -122,27 +122,31 @@ public class HelpMethods {
             return currentTile * Game.TILES_SIZE;
     }
 
-    public static float GetEntityYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed) {
+    public static float GetEntityYPosUnderRoofOrAboveFloor(Rectangle2D.Float hitbox, float airSpeed, String entity) {
+        int entityOffset = -7;
+        if (entity.equals("player"))
+            entityOffset = 57;
         int currentTile = (int) (hitbox.y / Game.TILES_SIZE);
         if (airSpeed > 0) {
-            // Falling - touching floor
             int tileYPos = currentTile * Game.TILES_SIZE;
-            int yOffset = (int) (57 +Game.TILES_SIZE - hitbox.height)+7;
+            int yOffset = (int) (entityOffset +Game.TILES_SIZE - hitbox.height)+7;
             return tileYPos + yOffset - 1;
         } else
-            // Jumping
             return currentTile * Game.TILES_SIZE;
 
     }
 
     public static boolean IsEntityOnFloor(Rectangle2D.Float hitbox, int[][] lvlData) {
-        // Check the pixel below bottomleft and bottomright
         if (!IsSolid(hitbox.x, hitbox.y + hitbox.height + 1, lvlData))
             if (!IsSolid(hitbox.x + hitbox.width, hitbox.y + hitbox.height + 1, lvlData))
                 return false;
 
         return true;
 
+    }
+
+    public static boolean IsFloor(Rectangle2D.Float hitbox, float xSpeed, int[][] lvlData) {
+        return IsSolid(hitbox.x + xSpeed, hitbox.y + hitbox.height + 1, lvlData);
     }
 
 }

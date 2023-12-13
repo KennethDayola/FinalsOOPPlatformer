@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import entities.Player;
 import objects.ObjectManager;
 import levels.LevelManager;
+import entities.EnemyManager;
 import main.Game;
 
 import utilz.LoadSave;
@@ -20,6 +21,7 @@ public class Playing extends State implements Statemethods {
     private Player player;
     private ObjectManager objectManager;
     private LevelManager levelManager;
+    private EnemyManager enemyManager;
 
     private int xLvlOffset;
     private int leftBorder = (int) (0.3 * Game.GAME_WIDTH);
@@ -50,6 +52,7 @@ public class Playing extends State implements Statemethods {
     private void initClasses() {
         levelManager = new LevelManager(game);
         objectManager = new ObjectManager(this);
+        enemyManager = new EnemyManager(this);
 
         player = new Player(100 * Game.SCALE, 260 * Game.SCALE, (int) (64 * Game.SCALE), (int) (64 * Game.SCALE), this);
         player.loadLvlData(levelManager.getCurrentLevel().getLevelData());
@@ -61,6 +64,7 @@ public class Playing extends State implements Statemethods {
         if (!completed) {
             levelManager.update();
             objectManager.update();
+            enemyManager.update(levelManager.getCurrentLevel().getLevelData());
             if (spawnPlayer)
                 player.update();
             checkCloseToBorder();
@@ -93,6 +97,7 @@ public class Playing extends State implements Statemethods {
         levelManager.draw(g, xLvlOffset);
         if (spawnPlayer && !completed)
             player.render(g, xLvlOffset);
+        enemyManager.draw(g, xLvlOffset);
         objectManager.draw(g, xLvlOffset);
 
         g.setColor(Color.WHITE);

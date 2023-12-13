@@ -5,6 +5,25 @@ public class Constants {
     public static final float GRAVITY = 0.04f * Game.SCALE;
     public static final int ANI_SPEED = 25;
 
+    public static class EnemyConstants{
+        public static final int FIRE_SPIRIT = 0;
+        public static final int FIRE_SPIRIT_DIMENSIONS = (int) (32 * Game.SCALE);
+
+        public static final int FIRE_SPIRIT_DRAWOFFSET_X = (int) (7 * Game.SCALE);
+        public static final int FIRE_SPIRIT_DRAWOFFSET_Y = (int) (12 * Game.SCALE);
+
+        public static int GetSpriteAmount(){
+            return 5;
+        }
+    }
+
+    public static class Directions {
+        public static final int LEFT = 0;
+        public static final int UP = 1;
+        public static final int RIGHT = 2;
+        public static final int DOWN = 3;
+    }
+
     public static class ObjectConstants {
 
         public static final int WATER_BASE = 0;
@@ -63,6 +82,7 @@ public class Constants {
         public static final int JUMP = 2;
         public static final int FALLING = 3;
         public static final int DEATH = 4;
+        public static final int WATER_DEATH = 5;
 
         public static int GetSpriteAmount (int player_action){
             switch (player_action) {
@@ -76,6 +96,8 @@ public class Constants {
                     return 2;
                 case DEATH:
                     return 5;
+                case WATER_DEATH:
+                    return 4;
             }
             return player_action;
         }

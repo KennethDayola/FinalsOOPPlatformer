@@ -14,17 +14,17 @@ public class Dialogue {
             "So, here's the deal: I need your mad skills and your good vibes to help me get to that portal..",
             "Will we make it? Who knows? But one thing's for sure – this adventure is about to get wild. So, buckle up, my friends!",
             "We're on a sheet-rescue mission, and nothing's gonna stand in our way. To the portal and whatever awaits us on the other side!",
-            "Also in this platformer, my character and water have an agreement",
+            "By the way.. In this platformer, my character and water have an agreement...",
             "I don't swim, and water doesn't try to turn me into an accidental deep-sea explorer. It's a one-sided deal, really.",
             "P.S.... Press P if you ever get stuck in a block. The developer didn't how to fix it anyways."},
 
             //SCENE 2
             {"",
-            "Alright, friends, here's the lowdown. Ahead lie some tricky spikes, the kind that make platformers a real nail-biter.",
+            "Alright, friends, here's the lowdown. Up ahead, you'll encounter some tricky foes, fiery spirits that turn this platformer into a real nail-biter.",
             "Just wanted to give you a heads-up before we dive into the action.",
-            "These spikes mean business, and one misstep, and well, you know the drill.",
-            "Sure, I could go for the classic 'jump over them' move, but these aren't your average spikes. ",
-            "They're strategically placed, and I'll need some serious gaming ninja moves to navigate through.",
+            "These fiery adversaries mean business, and one misstep, and well, you know the drill.",
+            "Sure, I could try the classic 'avoid them' tactic, but these aren't your average enemies. ",
+            "They call this place home, and I'll need some careful moves to navigate through without getting singed.",
             "Buckle up, and let's hope the game physics are on my side today."},
 
             //SCENE 3

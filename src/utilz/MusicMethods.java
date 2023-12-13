@@ -27,8 +27,9 @@ public class MusicMethods {
     public static MusicMethods runningSound = new MusicMethods();
     public static MusicMethods successSound = new MusicMethods();
     public static MusicMethods portalSound = new MusicMethods();
+    public static MusicMethods fireDeathSound = new MusicMethods();
 
-    public static final String MENU_MUSIC = "/res/InDreamlandbyChillpeach.wav";
+    public static final String MENU_MUSIC = "/res/menuMusic.wav";
     public static final String GAME_MUSIC = "/res/game_music.wav";
     public static final String HOVER_MUSIC = "/res/Retro12.wav";
     public static final String CLICK_MUSIC = "/res/Retro1.wav";
@@ -40,6 +41,8 @@ public class MusicMethods {
     public static final String SPIKE_HIT = "/res/spikeHit.wav";
     public static final String SUCCESS_SOUND = "/res/successSound.wav";
     public static final String PORTAL_SOUND = "/res/portalSound.wav";
+    public static final String FIRE_DEATH_SOUND = "/res/fireDeath.wav";
+
     public static void initMusic(){
         MusicMethods.clickSound.loadMusic(MusicMethods.CLICK_MUSIC);
         MusicMethods.vnClickSound.loadMusic(MusicMethods.VN_CLICK_SOUND);
@@ -51,6 +54,7 @@ public class MusicMethods {
         MusicMethods.spikeHit.loadMusic(MusicMethods.SPIKE_HIT);
         MusicMethods.successSound.loadMusic(MusicMethods.SUCCESS_SOUND);
         MusicMethods.portalSound.loadMusic(MusicMethods.PORTAL_SOUND);
+        MusicMethods.fireDeathSound.loadMusic(MusicMethods.FIRE_DEATH_SOUND);
         MusicMethods.bgm.loadMusic(MusicMethods.MENU_MUSIC);
         MusicMethods.bgm.loadGameMusic();
     }
@@ -72,6 +76,7 @@ public class MusicMethods {
             musicPlayed = true;
             clip.setMicrosecondPosition(0);
             if (loadedFilePath.equals(MENU_MUSIC)) {
+                setVolume(0.85f, clip);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             }
             else if (loadedFilePath.equals(RUNNING_SOUND)){

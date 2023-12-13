@@ -45,16 +45,7 @@ public class Story extends State implements Statemethods{
         if (!game.getPlaying().getCompleted()) {
             updateClickCondition();
             if (clickCounter == clickCondition) {
-                Gamestate.state = Gamestate.PLAYING;
-                clickCounter = 0;
-                dialogueIndex = 0;
-                firstTextIteration = true;
-                startText = false;
-                drawnIntro = false;
-                textBoxIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
-                charIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
-                if (storyFlag == 1)
-                    game.getPlaying().setSpawnPlayer(true);
+                switchToPlayingState();
             }
             if (drawnIntro) {
                 if (textBoxIntroOffset >= (int) (300 * Game.SCALE)) {
@@ -70,6 +61,19 @@ public class Story extends State implements Statemethods{
                 displayText();
             }
         }
+    }
+
+    private void switchToPlayingState(){
+        Gamestate.state = Gamestate.PLAYING;
+        clickCounter = 0;
+        dialogueIndex = 0;
+        firstTextIteration = true;
+        startText = false;
+        drawnIntro = false;
+        textBoxIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
+        charIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
+        if (storyFlag == 1)
+            game.getPlaying().setSpawnPlayer(true);
     }
 
     private void updateClickCondition() {
@@ -92,7 +96,7 @@ public class Story extends State implements Statemethods{
             Graphics2D g2d = (Graphics2D) g;
             g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-            g.setColor(new Color(0, 0, 0, 100));
+            g.setColor(new Color(0, 0, 0, 120));
             g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
 
             g.drawImage(charSprite, charIntroOffset, 0, (int) (360 * Game.SCALE), (int) (448 * Game.SCALE), null);
@@ -192,11 +196,10 @@ public class Story extends State implements Statemethods{
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()){
-            case KeyEvent.VK_L:
-                System.out.println("Switching to PLAYING state");
-
-                break;
+        if (e.getKeyCode() == KeyEvent.VK_P) {
+            switchToPlayingState();
+            MusicMethods.vnClickSound.play();
+            clickCounter++;
         }
     }
 
