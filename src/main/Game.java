@@ -2,6 +2,7 @@ package main;
 
 import java.awt.Graphics;
 
+import OtherComponents.SaveFinishTimes;
 import gamestates.Gamestate;
 import gamestates.Menu;
 import gamestates.Playing;
@@ -157,7 +158,10 @@ public class Game implements Runnable {
     }
 
     public void resetGame() {
-        playing.setGameTimer(0);
+        SaveFinishTimes.getFinishTimes().add(playing.getMinutes() + "m " + playing.getSeconds() + "s");
+        SaveFinishTimes.saveFinishTimes();
+
+        playing.setTime(0);
         playing.getPlayer().resetDirBooleans();
         playing.setCheckpoint(100 * SCALE, 250 * SCALE);
         playing.resetAll();

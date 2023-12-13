@@ -72,8 +72,10 @@ public class Story extends State implements Statemethods{
         drawnIntro = false;
         textBoxIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
         charIntroOffset = (int) (Game.ORIG_HEIGHT * Game.SCALE);
-        if (storyFlag == 1)
+        if (storyFlag == 1) {
+            game.getPlaying().setStartTime(System.currentTimeMillis());
             game.getPlaying().setSpawnPlayer(true);
+        }
     }
 
     private void updateClickCondition() {
@@ -85,7 +87,7 @@ public class Story extends State implements Statemethods{
                 clickCondition = 7;
                 break;
             case 3:
-                clickCondition = 15;
+                clickCondition = 14;
                 break;
         }
     }
@@ -199,7 +201,6 @@ public class Story extends State implements Statemethods{
         if (e.getKeyCode() == KeyEvent.VK_P) {
             switchToPlayingState();
             MusicMethods.vnClickSound.play();
-            clickCounter++;
         }
     }
 

@@ -32,8 +32,9 @@ public class Playing extends State implements Statemethods {
     private BufferedImage backgroundImg, bigCloud, smallCloud, bigRock, smallTerrain;
     private BufferedImage completedScreen;
     private boolean paused = false, gameOver = false, spawnPlayer = false, completed = false;
-    private long startTime;
+    private long startTime, elapsedTime, currentTime;
     private int gameTimer;
+    private int minutes, seconds;
 
     public Playing(Game game) {
         super(game);
@@ -45,8 +46,6 @@ public class Playing extends State implements Statemethods {
         smallTerrain = LoadSave.GetSpriteAtlas(LoadSave.SMALL_TERRAIN);
         completedScreen = LoadSave.GetSpriteAtlas(LoadSave.COMPLETED_SCREEN);
         objectManager.loadObjects(levelManager.getCurrentLevel());
-
-        startTime = System.currentTimeMillis();
     }
 
     private void initClasses() {
@@ -68,7 +67,8 @@ public class Playing extends State implements Statemethods {
             if (spawnPlayer)
                 player.update();
             checkCloseToBorder();
-            gameTimerUpdate();
+            if (Gamestate.state == Gamestate.PLAYING)
+                gameTimerUpdate();
             updateRunningSound();
         }
     }
@@ -84,8 +84,8 @@ public class Playing extends State implements Statemethods {
     }
 
     private void gameTimerUpdate() {
-        long currentTime = System.currentTimeMillis();
-        long elapsedTime = currentTime - startTime;
+        currentTime = System.currentTimeMillis();
+        elapsedTime = currentTime - startTime;
         gameTimer = (int) (elapsedTime / 1000);
     }
 
@@ -111,8 +111,8 @@ public class Playing extends State implements Statemethods {
                 Graphics2D g2d = (Graphics2D) g;
                 g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-                int minutes = gameTimer / 60;
-                int seconds = gameTimer % 60;
+                minutes = gameTimer / 60;
+                seconds = gameTimer % 60;
 
                 g.drawImage(completedScreen,0,0, (int) (Game.ORIG_WIDTH * Game.SCALE), (int) (Game.ORIG_HEIGHT * Game.SCALE), null);
 
@@ -190,9 +190,9 @@ public class Playing extends State implements Statemethods {
                     if (!player.getInAir())
                         MusicMethods.jumpSound.play();
                     break;
-                case KeyEvent.VK_BACK_SPACE:
-                    Gamestate.state = Gamestate.MENU;
-                    break;
+//                case KeyEvent.VK_BACK_SPACE:
+//                    Gamestate.state = Gamestate.MENU;
+//                    break;
                 case KeyEvent.VK_P:
                     resetAll();
                     break;
@@ -204,11 +204,11 @@ public class Playing extends State implements Statemethods {
 
                     }
                     break;
-                case KeyEvent.VK_L:
-                    System.out.println("Switching to STORY state");
-                    player.resetDirBooleans();
-                    Gamestate.state = Gamestate.STORY;
-                    break;
+//                case KeyEvent.VK_L:
+//                    System.out.println("Switching to STORY state");
+//                    player.resetDirBooleans();
+//                    Gamestate.state = Gamestate.STORY;
+//                    break;
             }
         }
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
@@ -253,6 +253,15 @@ public class Playing extends State implements Statemethods {
     public boolean getCompleted() {
         return completed;
     }
+
+    public int getMinutes() {
+        return minutes;
+    }
+
+    public int getSeconds() {
+        return seconds;
+    }
+
     public void checkSpikesTouched(Player player) {
         objectManager.checkSpikesTouched(player);
     }
@@ -268,14 +277,21 @@ public class Playing extends State implements Statemethods {
     public void setSpawnPlayer(boolean spawn){
         this.spawnPlayer = spawn;
     }
-
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
-    public void setGameTimer(int time){
+    public void setTime(int time){
         this.gameTimer = time;
+        this.minutes = 0;
+        this.seconds = 0;
+        this.elapsedTime = 0;
     }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
     public void windowFocusLost() {
         player.resetDirBooleans();
     }

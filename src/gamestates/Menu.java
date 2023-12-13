@@ -17,7 +17,7 @@ import utilz.MusicMethods;
 import static utilz.Constants.UI.Buttons.*;
 
 public class Menu extends State implements Statemethods {
-    private MenuButton[] button = new MenuButton[3];
+    private MenuButton[] button = new MenuButton[2];
     private BufferedImage backgroundImg;
     private Image backgroundGif;
     private boolean isBackgroundGifDrawn = false;
@@ -51,8 +51,7 @@ public class Menu extends State implements Statemethods {
 
     private void loadButtons() {
         button[0] = new MenuButton((int) (Game.GAME_WIDTH / 2.4), (int) (300 * Game.SCALE), 0, Gamestate.STORY, B_WIDTH_DEFAULT, B_HEIGHT_DEFAULT, B_DESIREDWIDTH, B_DESIREDHEIGHT, LoadSave.MENU_PLAYBTN);
-        button[1] = new MenuButton((int) (Game.GAME_WIDTH / 2.45), (int) (340 * Game.SCALE), 0, Gamestate.OPTIONS, B2_WIDTH_DEFAULT, B2_HEIGHT_DEFAULT, B2_DESIREDWIDTH, B2_DESIREDHEIGHT, LoadSave.MENU_EXITOPTIONSBTN);
-        button[2] = new MenuButton((int) (Game.GAME_WIDTH / 2.18), (int) (340 * Game.SCALE), 1, Gamestate.OPTIONS, B2_WIDTH_DEFAULT, B2_HEIGHT_DEFAULT, B2_DESIREDWIDTH, B2_DESIREDHEIGHT, LoadSave.MENU_EXITOPTIONSBTN);
+        button[1] = new MenuButton((int) (359 * Game.SCALE), (int) (338 * Game.SCALE), 1, Gamestate.OPTIONS, B2_WIDTH_DEFAULT, B2_HEIGHT_DEFAULT, B2_DESIREDWIDTH, B2_DESIREDHEIGHT, LoadSave.MENU_EXITOPTIONSBTN);
     }
 
     @Override
@@ -172,9 +171,6 @@ public class Menu extends State implements Statemethods {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_ENTER)
-            Gamestate.state = Gamestate.PLAYING;
-
     }
 
     @Override
