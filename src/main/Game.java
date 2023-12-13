@@ -1,6 +1,8 @@
 package main;
 
 import java.awt.Graphics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import OtherComponents.SaveFinishTimes;
 import gamestates.Gamestate;
@@ -8,6 +10,8 @@ import gamestates.Menu;
 import gamestates.Playing;
 import gamestates.Story;
 import utilz.MusicMethods;
+
+import javax.swing.*;
 
 public class Game implements Runnable {
 
@@ -39,8 +43,20 @@ public class Game implements Runnable {
         gameWindow = new GameWindow(gamePanel);
         gamePanel.setFocusable(true);
         gamePanel.requestFocus();
+        startBgmTimer();
 
         startGameLoop();
+    }
+
+    private void startBgmTimer() {
+        Timer bgmTimer = new Timer(310, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MusicMethods.bgm.play();
+            }
+        });
+        bgmTimer.setRepeats(false); // Set to non-repeating
+        bgmTimer.start();
     }
 
     private void initMusic() {

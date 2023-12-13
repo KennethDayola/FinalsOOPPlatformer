@@ -46,7 +46,10 @@ public class Menu extends State implements Statemethods {
 
     private void loadBackground() {
         backgroundImg = LoadSave.GetSpriteAtlas(LoadSave.MENU_BACKGROUND);
-        backgroundGif = new ImageIcon("res/menu.gif").getImage();
+        String imagePath = "/res/menu.gif";
+        java.net.URL imageURL = getClass().getResource(imagePath);
+        assert imageURL != null;
+        backgroundGif = new ImageIcon(imageURL).getImage();
     }
 
     private void loadButtons() {
@@ -64,10 +67,10 @@ public class Menu extends State implements Statemethods {
     public void draw(Graphics g) {
         g.setColor(new Color(68,108,163,255));
         g.fillRect(0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
-        if (firstLoading) {
-            showGifBg = false;
-            threadSleepForLoading();
-        }
+//        if (firstLoading) {
+//            showGifBg = false;
+//            threadSleepForLoading();
+//        }
         if (showGifBg) {
             g.drawImage(backgroundGif, 0, 0, Game.GAME_WIDTH, Game.GAME_HEIGHT, null);
             isBackgroundGifDrawn = true;
@@ -80,16 +83,16 @@ public class Menu extends State implements Statemethods {
             mb.draw(g);
     }
 
-    private void threadSleepForLoading() {
-        try {
-            Thread.sleep(1500);
-            showGifBg = true;
-            firstLoading = false;
-            startBgmTimer();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void threadSleepForLoading() {
+//        try {
+//            Thread.sleep(1500);
+//            showGifBg = true;
+//            firstLoading = false;
+//
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private void startBgmTimer() {
         Timer bgmTimer = new Timer(310, new ActionListener() {
