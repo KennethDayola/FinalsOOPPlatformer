@@ -182,6 +182,7 @@ public class Game implements Runnable {
         playing.setCheckpoint(100 * SCALE, 250 * SCALE);
         playing.resetAll();
         playing.getPlayer().setPlayerFacingRight();
+        playing.getObjectManager().setPortalTouched(false);
         story.setStoryFlag(1);
         story.setClickCounter(0);
 

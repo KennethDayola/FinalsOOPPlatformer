@@ -105,7 +105,7 @@ public class Playing extends State implements Statemethods {
         g.drawString("Time: " + gameTimer + "s", Game.GAME_WIDTH - 100, 20);
 
         if (paused || completed){
-            g.setColor(new Color(0,0,0,200));
+            g.setColor(new Color(0, 0, 0,200));
             g.fillRect(0,0, Game.GAME_WIDTH, Game.GAME_HEIGHT);
             if (completed){
                 Graphics2D g2d = (Graphics2D) g;

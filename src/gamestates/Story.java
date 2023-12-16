@@ -18,7 +18,7 @@ public class Story extends State implements Statemethods{
     private Timer textTimer;
     private boolean drawnIntro = false;
     private boolean startText = false;
-    private boolean textDisplayComplete = true, firstTextIteration = true;
+    private boolean textDisplayComplete = true, firstTextIteration = true, usedSkipKey = false;
     private BufferedImage textBox;
     private BufferedImage charSprite;
     private int dialogueIndex = 0, clickCounter = 0, clickCondition;
@@ -46,6 +46,10 @@ public class Story extends State implements Statemethods{
             updateClickCondition();
             if (clickCounter == clickCondition) {
                 switchToPlayingState();
+            }
+            if (usedSkipKey) {
+                dialogueIndex++;
+                usedSkipKey = false;
             }
             if (drawnIntro) {
                 if (textBoxIntroOffset >= (int) (300 * Game.SCALE)) {
@@ -201,6 +205,7 @@ public class Story extends State implements Statemethods{
         if (e.getKeyCode() == KeyEvent.VK_P) {
             switchToPlayingState();
             MusicMethods.vnClickSound.play();
+            usedSkipKey = true;
         }
     }
 

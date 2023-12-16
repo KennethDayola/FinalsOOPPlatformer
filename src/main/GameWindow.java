@@ -3,11 +3,11 @@ package main;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
+import javax.swing.*;
 
 public class GameWindow {
     private JFrame jframe;
@@ -22,7 +22,7 @@ public class GameWindow {
 
         jframe.setResizable(false);
         try {
-            BufferedImage iconImage = ImageIO.read(new File("res/icon.png"));
+            BufferedImage iconImage = ImageIO.read(Objects.requireNonNull(getClass().getResource("/res/icon.png")));
             jframe.setIconImage(iconImage);
         } catch (IOException e) {
             e.printStackTrace();

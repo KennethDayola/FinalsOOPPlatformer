@@ -221,4 +221,7 @@ public class ObjectManager {
     public boolean getInPortal(){
         return inPortal;
     }
+    public void setPortalTouched(boolean portalTouched) {
+        this.portalTouched = portalTouched;
+    }
 }

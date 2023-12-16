@@ -2,9 +2,10 @@ package OtherComponents;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SaveFinishTimes {
-    private static final String FILE_PATH = "finish_times.txt";
+    private static final String FILE_PATH = "finish_times_ranked.txt";
     private static final ArrayList<String> finishTimes = new ArrayList<>();
 
     static {
@@ -12,6 +13,7 @@ public class SaveFinishTimes {
     }
 
     public static void saveFinishTimes() {
+        Collections.sort(finishTimes);
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH))) {
             for (String time : finishTimes) {
                 writer.write(time);

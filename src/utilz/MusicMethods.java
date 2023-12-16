@@ -75,25 +75,25 @@ public class MusicMethods {
         if (!musicPlayed){
             musicPlayed = true;
             clip.setMicrosecondPosition(0);
-            if (loadedFilePath.equals(MENU_MUSIC)) {
-                setVolume(0.85f, clip);
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-            }
-            else if (loadedFilePath.equals(RUNNING_SOUND)){
-                clip.loop(Clip.LOOP_CONTINUOUSLY);
-            }
-            else if (loadedFilePath.equals(HOVER_MUSIC)){
-                clip.stop();
-                clip.setMicrosecondPosition(0);
-                clip.start();
-            }
-            else {
-                if (loadedFilePath.equals(CHECKPOINT_SOUND))
-                    setVolume(0.8f, clip);
-                clip.stop();
-                clip.setMicrosecondPosition(0);
-                clip.start();
-                musicPlayed = false;
+            switch (loadedFilePath) {
+                case MENU_MUSIC -> {
+                    setVolume(0.85f, clip);
+                    clip.loop(Clip.LOOP_CONTINUOUSLY);
+                }
+                case RUNNING_SOUND -> clip.loop(Clip.LOOP_CONTINUOUSLY);
+                case HOVER_MUSIC -> {
+                    clip.stop();
+                    clip.setMicrosecondPosition(0);
+                    clip.start();
+                }
+                default -> {
+                    if (loadedFilePath.equals(CHECKPOINT_SOUND))
+                        setVolume(0.8f, clip);
+                    clip.stop();
+                    clip.setMicrosecondPosition(0);
+                    clip.start();
+                    musicPlayed = false;
+                }
             }
         }
     }
@@ -115,7 +115,7 @@ public class MusicMethods {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                setVolume(0.85f, gameClip);
+                setVolume(0.78f, gameClip);
                 gameClip.loop(Clip.LOOP_CONTINUOUSLY);
                 timer.cancel();
             }

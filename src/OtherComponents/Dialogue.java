@@ -16,7 +16,7 @@ public class Dialogue {
             "We're on a sheet-rescue mission, and nothing's gonna stand in our way. To the portal and whatever awaits us on the other side!",
             "By the way.. In this platformer, my character and water have an agreement...",
             "I don't swim, and water doesn't try to turn me into an accidental deep-sea explorer. It's a one-sided deal, really.",
-            "P.S.... Press P if you ever get stuck in a block. The developer didn't how to fix it anyways."},
+            "P.S.... Press P to go back to the checkpoint. The developer left a secret passage there because, frankly, debugging is hard."},
 
             //SCENE 2
             {"",
